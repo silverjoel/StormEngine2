@@ -2051,11 +2051,11 @@ idGameLocal::InitScriptForMap
 void idGameLocal::InitScriptForMap()
 {
 	// create a thread to run frame commands on
-	frameCommandThread = new idThread( SCRIPT_DEFAULTFUNC );
+	frameCommandThread = new idThread( SCRIPT_DEFAULT_FUNC );
 	frameCommandThread->ManualDelete();
 	
 	// run the main game script function (not the level specific main)
-	const function_t* func = program.FindFunction( SCRIPT_DEFAULTFUNC );
+	const function_t* func = program.FindFunction( SCRIPT_DEFAULT_FUNC );
 	if( func != NULL )
 	{
 		idThread* thread = new idThread( func );
