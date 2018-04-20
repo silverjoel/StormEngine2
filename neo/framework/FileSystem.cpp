@@ -1020,11 +1020,11 @@ void idFileSystemLocal::BuildOrderedStartupContainer(idStrList &orderedFiles)
 	}
 	FreeFileList( fl );
 	
-	orderedFiles.AddUnique( "script/se2_main.script" );
+	orderedFiles.AddUnique(SCRIPT_DEFAULT);
 	//orderedFiles.AddUnique( "script/doom_defs.script" );
-	orderedFiles.AddUnique( "script/se2_defs.script" );
-	orderedFiles.AddUnique( "script/se2_events.script" );
-	orderedFiles.AddUnique( "script/se2_util.script" );
+	orderedFiles.AddUnique(SCRIPT_DEFAULT_DEFS);
+	orderedFiles.AddUnique(SCRIPT_DEFAULT_EVENTS);
+	orderedFiles.AddUnique(SCRIPT_DEFAULT_UTILS);
 	//orderedFiles.AddUnique( "script/weapon_base.script" );
 	//orderedFiles.AddUnique( "script/ai_base.script" );
 	//orderedFiles.AddUnique( "script/weapon_fists.script" );
