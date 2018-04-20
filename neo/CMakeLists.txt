@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-project(StormEngine2)
+project(QUIP)
 
 option(USE_MFC_TOOLS
 		"Compile the built-in MFC based tools" ON)
@@ -1245,16 +1245,16 @@ if(MSVC)
 	
 	list(APPEND RBDOOM3_SOURCES ${WIN32_RESOURCES})
 	
-	add_executable(StormEngine2 WIN32 ${RBDOOM3_INCLUDES} ${RBDOOM3_SOURCES})
+	add_executable(QUIP WIN32 ${RBDOOM3_INCLUDES} ${RBDOOM3_SOURCES})
 		
-	#add_custom_command(TARGET SteelStorm2_bfg
+	#add_custom_command(TARGET QUIP
     #               PRE_BUILD
 	#			   COMMAND nmake ARGS /f Makefile.vc6 CFG=release
 	#			   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/curl/lib
     #               COMMENT "Compiling libcURL")
 		
-	add_dependencies(StormEngine2 idlib)
-	target_link_libraries(StormEngine2
+	add_dependencies(QUIP idlib)
+	target_link_libraries(QUIP
 		idlib
 		${DirectX_LIBRARIES}
 		#libcurl 
@@ -1271,10 +1271,10 @@ if(MSVC)
 		
 	#CMAKE_BINARY_DIR
 	if(CMAKE_CL_64)
-		install(TARGETS StormEngine2
+		install(TARGETS QUIP
 			RUNTIME DESTINATION .)
 	else()
-		install(TARGETS StormEngine2
+		install(TARGETS QUIP
 			RUNTIME DESTINATION .)
 	endif()
 	
@@ -1365,13 +1365,13 @@ else()
 	LIST(APPEND _compiler_FLAGS ${_directory_flags})
 	SEPARATE_ARGUMENTS(_compiler_FLAGS)
 	
-	# we need to recreate the precompiled header for SteelStorm2_bfg 
+	# we need to recreate the precompiled header for QUIP 
 	# (i.e. can't use the one created for idlib before)
 	# because some definitions (e.g. -D__IDLIB__ -D__DOOM_DLL__) differ
-	add_custom_target(precomp_header_StormEngine2 ALL
+	add_custom_target(precomp_header_QUIP ALL
 	                  COMMAND ${CMAKE_CXX_COMPILER} ${_compiler_FLAGS} -x c++-header idlib/precompiled.h -o idlib/precompiled.h.gch
 	                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-	                  COMMENT "Creating idlib/precompiled.h.gch for StormEngine2"
+	                  COMMENT "Creating idlib/precompiled.h.gch for QUIP"
 	                  )
 	
 	if(WIN32)
@@ -1389,15 +1389,15 @@ else()
 	                  )
 	
 	# make sure this is run after creating idlib
-	add_dependencies(precomp_header_StormEngine2 idlib)
+	add_dependencies(precomp_header_QUIP idlib)
 	
-	add_executable(StormEngine2 WIN32 ${RBDOOM3_SOURCES})
+	add_executable(QUIP WIN32 ${RBDOOM3_SOURCES})
 	
 	# make sure precompiled header is created before executable is compiled
-	add_dependencies(StormEngine2 precomp_header_StormEngine2)
+	add_dependencies(QUIP precomp_header_QUIP)
 	
 	# make sure precompiled header is deleted after executable is compiled
-	add_dependencies(rm_precomp_header StormEngine2)
+	add_dependencies(rm_precomp_header QUIP)
 	
 	if(MINGW)
 		include_directories(libs/sdl2/include)
@@ -1407,7 +1407,7 @@ else()
 	
 	if(WIN32)
 	
-		target_link_libraries(StormEngine2
+		target_link_libraries(QUIP
 			idlib
 			${DirectX_LIBRARIES}
 			#libcurl 
@@ -1425,7 +1425,7 @@ else()
 	endif()
 	
 	IF("${CMAKE_SYSTEM}" MATCHES "Linux")
-		target_link_libraries(StormEngine2
+		target_link_libraries(QUIP
 			idlib
 			GL
 			pthread
@@ -1437,7 +1437,7 @@ else()
 	endif()
 
 	IF("${CMAKE_SYSTEM}" MATCHES "FreeBSD")
-		target_link_libraries(StormEngine2
+		target_link_libraries(QUIP
 			idlib
 			GL
 			pthread
