@@ -461,8 +461,8 @@ void idCommonLocal::Frame()
 		// allow changing SIMD usage on the fly
 		if( com_forceGenericSIMD.IsModified() )
 		{
-			idSIMD::InitProcessor( "stormengine2", com_forceGenericSIMD.GetBool() ); // foresthale 2014-05-21: changed doom to phaeton
-			idDmapSIMD::InitProcessor( "stormengine2-dmap", com_forceGenericSIMD.GetBool() ); // foresthale 2014-05-21: changed doom to phaeton-dmap
+			idSIMD::InitProcessor( "quip", com_forceGenericSIMD.GetBool() ); // foresthale 2014-05-21: changed doom to phaeton *now quip
+			idDmapSIMD::InitProcessor( "quip-dmap", com_forceGenericSIMD.GetBool() ); // foresthale 2014-05-21: changed doom to phaeton-dmap *now quip
 			com_forceGenericSIMD.ClearModified();
 		}
 		
