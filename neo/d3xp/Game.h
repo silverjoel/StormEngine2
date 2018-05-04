@@ -39,11 +39,11 @@ If you have questions concerning this license or the applicable additional terms
 */
 
 // default scripts
-#define SCRIPT_DEFAULT				"script/se2_main.script"
-#define SCRIPT_DEFAULT_DEFS			"script/se2_defs.script"
-#define SCRIPT_DEFAULT_EVENTS		"script/se2_events.script"
-#define SCRIPT_DEFAULT_UTILS		"script/se2_utils.script"
-#define SCRIPT_DEFAULT_FUNC			"se2_main"
+#define SCRIPT_DEFAULT				"script/quip_main.script"
+#define SCRIPT_DEFAULT_DEFS			"script/quip_defs.script"
+#define SCRIPT_DEFAULT_EVENTS		"script/quip_events.script"
+#define SCRIPT_DEFAULT_UTILS		"script/quip_utils.script"
+#define SCRIPT_DEFAULT_FUNC			"quip_main"
 
 
 struct gameReturn_t
