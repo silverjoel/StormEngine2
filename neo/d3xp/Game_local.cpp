@@ -94,12 +94,12 @@ void beam_t::Clear()
 // List of all defs used by the player that will stay on the fast timeline
 static const char* fastEntityList[] =
 {
-	"player_female",
-	"weapon_flintlock",
-	"projectile_plasma",
-	"weapon_fists",
-	"projectile_rocket",
-	"projectile_bullet_machinegun",	
+	"player_ranger",
+//	"weapon_flintlock",
+//	"projectile_plasma",
+//	"weapon_fists",
+//	"projectile_rocket",
+//	"projectile_bullet_machinegun",	
 	NULL
 };
 /*
@@ -2120,7 +2120,7 @@ void idGameLocal::SpawnPlayer( int clientNum )
 	else
 	{
 		// precache the player
-		args.Set( "classname", gameLocal.world->spawnArgs.GetString( "def_player", "player_female" ) );
+		args.Set( "classname", gameLocal.world->spawnArgs.GetString( "def_player", "player_ranger" ) );
 	}
 	
 	// It's important that we increment numClients before calling SpawnEntityDef, because some
