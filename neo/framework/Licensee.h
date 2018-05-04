@@ -30,7 +30,7 @@ If you have questions concerning this license or the applicable additional terms
 #define GAME_NAME						"QUIP"		// appears on window titles and errors
 
 // RB: changed home folder so we don't break the savegame of the original game
-#define SAVE_PATH						"\\Kot-in-Action\\StormEngine2"
+#define SAVE_PATH						"\\QUIP"
 
 #define ENGINE_VERSION					"QUIP"	// printed in console
 // RB end
