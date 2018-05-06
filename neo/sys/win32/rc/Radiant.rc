@@ -1057,7 +1057,7 @@ BEGIN
     LTEXT           "Version:\t\t3.2",IDC_ABOUT_GLVERSION,10,111,249,10
     LTEXT           "Renderer:\tWHATEVER",IDC_ABOUT_GLRENDERER,10,121,253,24
     GROUPBOX        "OpenGL Extensions",IDC_STATIC,5,152,265,65
-    CONTROL         "Storm Engine 2 Level Editor 1.1 build 200\nCopyright ©1999, 2003 - 2004 idSoftware, Inc.\n\nCopyright © 2012 - 2014 Kot-in-Action Creative Artel\n\n",
+    CONTROL         "Storm Engine 2 Level Editor 1.1 build 200\nCopyright Â©1999, 2003 - 2004 idSoftware, Inc.\n\nCopyright Â© 2012 - 2014 Kot-in-Action Creative Artel\n\n",
                     IDC_STATIC,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,99,7,
                     240,78
 	DEFPUSHBUTTON   "OK",IDOK,255,7,35,14
@@ -2107,13 +2107,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Kot-in-Action Creative Artel"
-            VALUE "FileDescription", "Steel Storm 2"
+            VALUE "CompanyName", "QUIP"
+            VALUE "FileDescription", "QUIP"
             VALUE "FileVersion", "1, 0, 0, 1"
-            VALUE "InternalName", "Steel Storm 2"
+            VALUE "InternalName", "QUIP"
             VALUE "LegalCopyright", "Copyright (C) 2004 - 2013 id Software; Kot-in-Action Creative Artel"
-            VALUE "OriginalFilename", "SteelStorm2.EXE"
-            VALUE "ProductName", "Steel Storm 2"
+            VALUE "OriginalFilename", "QUIP.EXE"
+            VALUE "ProductName", "QUIP"
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
@@ -2494,14 +2494,14 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDR_MAINFRAME           "Steel Storm 2"
+    IDR_MAINFRAME           "QUIP"
     IDR_RADIANTYPE          "\nRadian\nRadian\n\n\nRadiant.Document\nRadian Document"
     IDR_SHADERTYPE          "\nUntitled\nSHADER Document\nShader Files (*.shader)\n.shader\nShaderFileType\nSHADER File Type\nSHADER\nShader Files\n"
 END
 
 STRINGTABLE 
 BEGIN
-    AFX_IDS_APP_TITLE       "SteelStorm2"
+    AFX_IDS_APP_TITLE       "QUIP"
     AFX_IDS_IDLEMESSAGE     "Ready"
 END
 
@@ -2802,7 +2802,7 @@ END
 STRINGTABLE 
 BEGIN
     ID_SHOW_LIGHTVOLUMES    "Show Light Volumes\nShow Light Volumes"
-    ID_SHOW_DOOM            "Enable Steel Storm 2\n"
+    ID_SHOW_DOOM            "Enable QUIP\n"
     ID_SELECTION_MOVEONLY   "Move selection only ( No size )\nMove selection only ( No size )"
 END
 
