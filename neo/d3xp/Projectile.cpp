@@ -1234,6 +1234,10 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 	{
 		GetPhysics()->SetAxis( normal.ToMat3() );
 	}
+	else	//QUIPEdit - From Phrozo: use the surface normal of entity this projectile collided with ( prefered axis )
+	{
+		GetPhysics()->SetAxis(collision.c.normal.ToMat3());
+	}		//EndQUIPEdit
 	GetPhysics()->SetOrigin( collision.endpos + 2.0f * collision.c.normal );
 	
 	// default remove time
@@ -1247,7 +1251,7 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 	}
 	
 	// change the model, usually to a PRT
-	fxname = NULL;
+	fxname = NULL;	
 	if( g_testParticle.GetInteger() == TEST_PARTICLE_IMPACT )
 	{
 		fxname = g_testParticleName.GetString();
@@ -1259,7 +1263,29 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 	
 	int surfaceType = collision.c.material != NULL ? collision.c.material->GetSurfaceType() : SURFTYPE_METAL;
 	if( !( fxname != NULL && *fxname != '\0' ) )
-	{
+	{	//QUIPEdit - added particle for all surfacetypes
+		switch (surfaceType)
+		{
+		case SURFTYPE_NONE:			fxname = spawnArgs.GetString("model_metal");		break;
+		case SURFTYPE_METAL:		fxname = spawnArgs.GetString("model_metal");		break;
+		case SURFTYPE_STONE:		fxname = spawnArgs.GetString("model_stone");		break;
+		case SURFTYPE_FLESH:		fxname = spawnArgs.GetString("model_flesh");		break;
+		case SURFTYPE_WOOD:			fxname = spawnArgs.GetString("model_wood");			break;
+		case SURFTYPE_CARDBOARD:	fxname = spawnArgs.GetString("model_cardboard");	break;
+		case SURFTYPE_LIQUID:		fxname = spawnArgs.GetString("model_liquid");		break;
+		case SURFTYPE_GLASS:		fxname = spawnArgs.GetString("model_glass");		break;
+		case SURFTYPE_PLASTIC:		fxname = spawnArgs.GetString("model_plastic");		break;
+		case SURFTYPE_RICOCHET:		fxname = spawnArgs.GetString("model_ricochet");		break;
+		case SURFTYPE_DIRT:			fxname = spawnArgs.GetString("model_dirt");			break;
+		case SURFTYPE_SAND:			fxname = spawnArgs.GetString("model_sand");			break;
+		case SURFTYPE_LAVA:			fxname = spawnArgs.GetString("model_lava");			break;
+		case SURFTYPE_CERAMIC:		fxname = spawnArgs.GetString("model_ceramic");		break;
+		case SURFTYPE_MIRROR:		fxname = spawnArgs.GetString("model_mirror");		break;
+		case SURFTYPE_BONE:			fxname = spawnArgs.GetString("model_bone");			break;
+		default:					fxname = spawnArgs.GetString("model_metal");		break;
+		}
+
+		/*
 		if( ( surfaceType == SURFTYPE_NONE ) || ( surfaceType == SURFTYPE_METAL ) || ( surfaceType == SURFTYPE_STONE ) )
 		{
 			fxname = spawnArgs.GetString( "model_smokespark" );
@@ -1272,6 +1298,8 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 		{
 			fxname = spawnArgs.GetString( "model_smoke" );
 		}
+		*/
+		//EndQUIPEdit
 	}
 	
 	// If the explosion is in liquid, spawn a particle splash

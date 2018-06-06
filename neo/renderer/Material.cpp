@@ -311,13 +311,13 @@ static infoParm_t	infoParms[] =
 	{"plastic",		0,	SURFTYPE_PLASTIC,	0 },	// plastic
 	{"ricochet",	0,	SURFTYPE_RICOCHET,	0 },	// behaves like metal but causes a ricochet sound
 	
-	// unassigned surface types
-	{"surftype10",	0,	SURFTYPE_10,	0 },
-	{"surftype11",	0,	SURFTYPE_11,	0 },
-	{"surftype12",	0,	SURFTYPE_12,	0 },
-	{"surftype13",	0,	SURFTYPE_13,	0 },
-	{"mirrorOblique",	0,	SURFTYPE_MIRROR,	0 }, // motorsep 04-07-2015; added SURFTYPE_MIRROR surface flag for oblique projections rendering cases
-	{"surftype15",	0,	SURFTYPE_15,	0 },
+	// added surface types
+	{"dirt",		0,	SURFTYPE_DIRT,		0 },	//QUIPEdit - Added surfacetype
+	{"sand",		0,	SURFTYPE_SAND,		0 },	//QUIPEdit - Added surfacetype
+	{"lava",		0,	SURFTYPE_LAVA,		0 },	//QUIPEdit - Added surfacetype
+	{"ceramic",		0,	SURFTYPE_CERAMIC,	0 },	//QUIPEdit - Added surfacetype
+	{"mirrorOblique",	0,	SURFTYPE_MIRROR,	0 },// motorsep 04-07-2015; added SURFTYPE_MIRROR surface flag for oblique projections rendering cases
+	{"bone",		0,	SURFTYPE_BONE,		0 },	//QUIPEdit - Added surfacetype
 };
 
 static const int numInfoParms = sizeof( infoParms ) / sizeof( infoParms[0] );

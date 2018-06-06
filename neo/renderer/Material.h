@@ -347,12 +347,12 @@ typedef enum
 	SURFTYPE_GLASS,
 	SURFTYPE_PLASTIC,
 	SURFTYPE_RICOCHET,
-	SURFTYPE_10,
-	SURFTYPE_11,
-	SURFTYPE_12,
-	SURFTYPE_13,
-	SURFTYPE_MIRROR, // motorsep 04-07-2015; added SURFTYPE_MIRROR surface flag for oblique projections rendering cases
-	SURFTYPE_15
+	SURFTYPE_DIRT,		//QUIPEdit - Added surfacetype
+	SURFTYPE_SAND,		//QUIPEdit - Added surfacetype
+	SURFTYPE_LAVA,		//QUIPEdit - Added surfacetype
+	SURFTYPE_CERAMIC,	//QUIPEdit - Added surfacetype
+	SURFTYPE_MIRROR,	// motorsep 04-07-2015; added SURFTYPE_MIRROR surface flag for oblique projections rendering cases
+	SURFTYPE_BONE		//QUIPEdit - Added surfacetype
 } surfTypes_t;
 
 // surface flags
