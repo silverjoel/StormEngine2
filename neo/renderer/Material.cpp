@@ -309,7 +309,7 @@ static infoParm_t	infoParms[] =
 	{"liquid",		0,	SURFTYPE_LIQUID,	0 },	// liquid
 	{"glass",		0,	SURFTYPE_GLASS,		0 },	// glass
 	{"plastic",		0,	SURFTYPE_PLASTIC,	0 },	// plastic
-	{"ricochet",	0,	SURFTYPE_RICOCHET,	0 },	// behaves like metal but causes a ricochet sound
+	{"snow",		0,	SURFTYPE_SNOW,		0 },	//QUIPEdit - Replaced _RICOCHET with _SNOW
 	
 	// added surface types
 	{"dirt",		0,	SURFTYPE_DIRT,		0 },	//QUIPEdit - Added surfacetype

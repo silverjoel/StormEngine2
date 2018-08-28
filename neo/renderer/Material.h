@@ -346,7 +346,7 @@ typedef enum
 	SURFTYPE_LIQUID,
 	SURFTYPE_GLASS,
 	SURFTYPE_PLASTIC,
-	SURFTYPE_RICOCHET,
+	SURFTYPE_SNOW,		//QUIPEdit - Replaced _RICOCHET with _SNOW
 	SURFTYPE_DIRT,		//QUIPEdit - Added surfacetype
 	SURFTYPE_SAND,		//QUIPEdit - Added surfacetype
 	SURFTYPE_LAVA,		//QUIPEdit - Added surfacetype

@@ -1275,7 +1275,7 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 		case SURFTYPE_LIQUID:		fxname = spawnArgs.GetString("model_liquid");		break;
 		case SURFTYPE_GLASS:		fxname = spawnArgs.GetString("model_glass");		break;
 		case SURFTYPE_PLASTIC:		fxname = spawnArgs.GetString("model_plastic");		break;
-		case SURFTYPE_RICOCHET:		fxname = spawnArgs.GetString("model_ricochet");		break;
+		case SURFTYPE_SNOW:			fxname = spawnArgs.GetString("model_snow");			break;	//QUIPEdit - Replaced _RICOCHET with _SNOW
 		case SURFTYPE_DIRT:			fxname = spawnArgs.GetString("model_dirt");			break;
 		case SURFTYPE_SAND:			fxname = spawnArgs.GetString("model_sand");			break;
 		case SURFTYPE_LAVA:			fxname = spawnArgs.GetString("model_lava");			break;
@@ -1336,7 +1336,7 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 		renderEntity.shaderParms[SHADERPARM_TIMEOFFSET] = -MS2SEC( gameLocal.time );
 		renderEntity.shaderParms[SHADERPARM_DIVERSITY] = gameLocal.random.CRandomFloat();
 		Show();
-		removeTime = ( removeTime > 3000 ) ? removeTime : 3000;
+		removeTime = ( removeTime > 5000 ) ? removeTime : 5000;	//QUIPEdit - changed from 3000 to 5000
 	}
 	
 	// explosion light
