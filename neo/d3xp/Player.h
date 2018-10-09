@@ -84,12 +84,14 @@ const int SAVING_THROW_TIME = 5000;		// maximum one "saving throw" every five se
 
 const int ASYNC_PLAYER_INV_AMMO_BITS = idMath::BitsForInteger( 3000 );
 const int ASYNC_PLAYER_INV_CLIP_BITS = -7;								// -7 bits to cover the range [-1, 60]
-
+//QUIP Edit - add all the quake games
 enum gameExpansionType_t
 {
 	GAME_BASE,
-	GAME_D3XP,
-	GAME_D3LE,
+	GAME_QUIP,
+	GAME_QUAKE,
+	GAME_QUAKE2,
+	GAME_QUAKE3,
 	GAME_UNKNOWN
 };
 

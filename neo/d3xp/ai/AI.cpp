@@ -4451,8 +4451,9 @@ void idAI::Killed( idEntity* inflictor, idEntity* attacker, int damage, const id
 	idAngles ang;
 	const char* modelDeath;
 	
+	//	QUIPEdit - Remove achievements for now
 	// Guardian died?  grats, you get an achievement
-	if( idStr::Icmp( name, "guardian_spawn" ) == 0 )
+/*	if( idStr::Icmp( name, "guardian_spawn" ) == 0 )
 	{
 		idPlayer* player = gameLocal.GetLocalPlayer();
 		if( player != NULL && player->GetExpansionType() == GAME_BASE )
@@ -4460,6 +4461,7 @@ void idAI::Killed( idEntity* inflictor, idEntity* attacker, int damage, const id
 			player->GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_DEFEAT_GUARDIAN_BOSS );
 		}
 	}
+*/
 	
 	// make sure the monster is activated
 	EndAttack();
@@ -5121,6 +5123,8 @@ void idAI::SetEnemy( idActor* newEnemy )
 	
 		// Check to see if we should unlock the 'Turncloak' achievement
 		const idActor* enemyEnt = enemy.GetEntity();
+		//	QUIPEdit - Remove achievements for now
+		/*
 		if( enemyEnt != NULL && enemyEnt->IsType( idPlayer::Type ) && newEnemy->IsType( idAI::Type ) && newEnemy->team == this->team && ( idStr::Icmp( newEnemy->GetName(), "hazmat_dummy" ) != 0 ) )
 		{
 			idPlayer* player = gameLocal.GetLocalPlayer();
@@ -5129,7 +5133,7 @@ void idAI::SetEnemy( idActor* newEnemy )
 				player->GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_TWO_DEMONS_FIGHT_EACH_OTHER );
 			}
 		}
-		
+		*/
 		enemy = newEnemy;
 		enemyNode.AddToEnd( newEnemy->enemyList );
 		if( newEnemy->health <= 0 )

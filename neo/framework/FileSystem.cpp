@@ -2234,10 +2234,14 @@ const char* idFileSystemLocal::OSPathToRelativePath( const char* OSPath )
 		// No colon and it doesn't start with a slash... it must already be a relative path
 		return OSPath;
 	}
+	//QUIP Edit - added path folders for the quake series
 	idStaticList< idStrStatic< 32 >, 5 > basePaths;
 	basePaths.Append( "base" );
-	basePaths.Append( "d3xp" );
-	basePaths.Append( "d3le" );
+	basePaths.Append( "quip" );
+	basePaths.Append( "quake" );
+	basePaths.Append( "quake2" );
+	basePaths.Append( "quake3" );
+	//QUIP Edit End
 	if( fs_game.GetString()[0] != 0 )
 	{
 		basePaths.Append( fs_game.GetString() );

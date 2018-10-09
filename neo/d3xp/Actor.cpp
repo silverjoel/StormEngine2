@@ -2468,7 +2468,8 @@ void idActor::Damage( idEntity* inflictor, idEntity* attacker, const idVec3& dir
 					player = static_cast< idPlayer* >( attacker );
 				}
 				
-				if( player != NULL )
+//	QUIPEdit - Remove achievements for now
+/*				if( player != NULL )
 				{
 					if( !damageNotByFists && player->GetExpansionType() == GAME_BASE )
 					{
@@ -2561,6 +2562,7 @@ void idActor::Damage( idEntity* inflictor, idEntity* attacker, const idVec3& dir
 						player->GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_KILL_MONSTER_WITH_1_HEALTH_LEFT );
 					}
 				}
+*/
 			}
 			
 			Killed( inflictor, attacker, damage, dir, location );

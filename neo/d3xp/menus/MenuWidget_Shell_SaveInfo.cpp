@@ -121,14 +121,20 @@ void idMenuWidget_Shell_SaveInfo::Update()
 		const char* expansionStr = "";
 		switch( details.GetExpansion() )
 		{
-			case GAME_D3XP:
-				expansionStr = idLocalization::GetString( "#str_swf_resurrection" );
+			case GAME_QUIP:
+				expansionStr = idLocalization::GetString( "#str_game_title_quip" );
 				break;
-			case GAME_D3LE:
-				expansionStr = idLocalization::GetString( "#str_swf_lost_episodes" );
+			case GAME_QUAKE:
+				expansionStr = idLocalization::GetString( "#str_game_title_quake" );
+				break;
+			case GAME_QUAKE2:
+				expansionStr = idLocalization::GetString("#str_game_title_quake2");
+				break;
+			case GAME_QUAKE3:
+				expansionStr = idLocalization::GetString("#str_game_title_quake3");
 				break;
 			case GAME_BASE:
-				expansionStr = idLocalization::GetString( "#str_swf_doom3" );
+				expansionStr = idLocalization::GetString( "#str_game_title_base" );
 				break;
 			default:
 				expansionStr = idLocalization::GetString( "#str_savegame_title" );

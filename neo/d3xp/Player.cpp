@@ -3888,14 +3888,21 @@ void idPlayer::GivePDA( const idDeclPDA* pda, const char* securityItem )
 	{
 		switch( GetExpansionType() )
 		{
+			//QUIP Edit - add the quake games
 			case GAME_BASE:
 				GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_PDAS_BASE );
 				break;
-			case GAME_D3XP:
-				GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_PDAS_ROE );
+			case GAME_QUIP:
+				GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_PDAS_ROE );  //change later
 				break;
-			case GAME_D3LE:
-				GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_PDAS_LE );
+			case GAME_QUAKE:
+				GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_PDAS_LE );	//change later
+				break;
+			case GAME_QUAKE2:
+				GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_PDAS_LE);	//change later
+				break;
+			case GAME_QUAKE3:
+				GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_PDAS_LE);	//change later
 				break;
 		}
 	}
@@ -12343,19 +12350,27 @@ idPlayer::GetExpansionType
 ========================
 */
 gameExpansionType_t idPlayer::GetExpansionType() const
-{
-	const char* expansion = spawnArgs.GetString( "player_expansion", "d3" );
-	if( idStr::Icmp( expansion, "d3" ) == 0 )
+{		//QUIP Edit - add the quake games
+	const char* expansion = spawnArgs.GetString( "player_expansion", "base" );
+	if( idStr::Icmp( expansion, "base" ) == 0 )
 	{
 		return GAME_BASE;
 	}
-	if( idStr::Icmp( expansion, "d3xp" ) == 0 )
+	if( idStr::Icmp( expansion, "quip" ) == 0 )
 	{
-		return GAME_D3XP;
+		return GAME_QUIP;
 	}
-	if( idStr::Icmp( expansion, "d3le" ) == 0 )
+	if( idStr::Icmp( expansion, "quake" ) == 0 )
 	{
-		return GAME_D3LE;
+		return GAME_QUAKE;
+	}
+	if (idStr::Icmp(expansion, "quake2") == 0)
+	{
+		return GAME_QUAKE2;
+	}
+	if (idStr::Icmp(expansion, "quake3") == 0)
+	{
+		return GAME_QUAKE3;
 	}
 	return GAME_UNKNOWN;
 }

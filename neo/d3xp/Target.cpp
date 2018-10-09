@@ -208,13 +208,13 @@ void idTarget_EndLevel::Event_Activate( idEntity* activator )
 	
 	if( !isTutorialMap && spawnArgs.GetBool( "endOfGame" ) )
 	{
-	
+//change later
 		if( player != NULL )
 		{
 			gameExpansionType_t expansion = player->GetExpansionType();
 			switch( expansion )
 			{
-				case GAME_D3XP:
+				case GAME_QUIP:
 					// The fall-through is done here on purpose so compleating the game on one difficulty will unlock all the easier difficulties
 					switch( g_skill.GetInteger() )
 					{
@@ -228,7 +228,7 @@ void idTarget_EndLevel::Event_Activate( idEntity* activator )
 							player->GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_ROE_COMPLETED_DIFFICULTY_0 );
 					}
 					break;
-				case GAME_D3LE:
+				case GAME_QUAKE:
 					// The fall-through is done here on purpose so compleating the game on one difficulty will unlock all the easier difficulties
 					switch( g_skill.GetInteger() )
 					{
@@ -240,6 +240,34 @@ void idTarget_EndLevel::Event_Activate( idEntity* activator )
 							player->GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_1 );
 						case 0:
 							player->GetAchievementManager().EventCompletesAchievement( ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_0 );
+					}
+					break;
+				case GAME_QUAKE2:
+					// The fall-through is done here on purpose so compleating the game on one difficulty will unlock all the easier difficulties
+					switch (g_skill.GetInteger())
+					{
+					case 3:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_3);
+					case 2:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_2);
+					case 1:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_1);
+					case 0:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_0);
+					}
+					break;
+				case GAME_QUAKE3:
+					// The fall-through is done here on purpose so compleating the game on one difficulty will unlock all the easier difficulties
+					switch (g_skill.GetInteger())
+					{
+					case 3:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_3);
+					case 2:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_2);
+					case 1:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_1);
+					case 0:
+						player->GetAchievementManager().EventCompletesAchievement(ACHIEVEMENT_LE_COMPLETED_DIFFICULTY_0);
 					}
 					break;
 				case GAME_BASE:
@@ -265,14 +293,14 @@ void idTarget_EndLevel::Event_Activate( idEntity* activator )
 			
 			switch( expansion )
 			{
-				case GAME_D3XP:
+				case GAME_QUIP:
 				{
-					cvarSystem->SetCVarBool( "g_roeNightmare", true );
+					cvarSystem->SetCVarBool( "g_roeNightmare", true );	//change later
 					break;
 				}
-				case GAME_D3LE:
+				case GAME_QUAKE:
 				{
-					cvarSystem->SetCVarBool( "g_leNightmare", true );
+					cvarSystem->SetCVarBool( "g_leNightmare", true );	//change later
 					break;
 				}
 				case GAME_BASE:
