@@ -4096,6 +4096,17 @@ void idDoor::Show()
 }
 
 /*
+============
+idMover::Killed
+============
+*/
+void idDoor::Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location)
+{
+	fl.takedamage = false;
+	ActivateTargets(this);
+}
+
+/*
 ================
 idDoor::GetLocalTriggerPosition
 ================
@@ -4750,6 +4761,1016 @@ void idDoor::Event_ClosePortal()
 }
 
 
+/*
+===============================================================================
+
+idButton
+
+A use can be triggered either by a touch function, by being shot, or by being
+targeted by another entity.
+
+===============================================================================
+*/
+/*
+const idEventDef EV_Button_SpawnButtonTrigger("<spawnButtonTrigger>", NULL);
+//const idEventDef EV_Button_SpawnSoundTrigger("<spawnSoundTrigger>", NULL);
+const idEventDef EV_Button_Open("open", NULL);
+const idEventDef EV_Button_Close("close", NULL);
+//const idEventDef EV_Button_IsOpen("isOpen", NULL, 'f');
+
+CLASS_DECLARATION(idMover_Binary, idButton)
+EVENT(EV_Touch, idButton::Event_Touch)
+//EVENT(EV_Activate, idButton::Event_Activate)
+EVENT(EV_Button_SpawnButtonTrigger, idButton::Event_SpawnButtonTrigger)
+//EVENT(EV_Button_SpawnSoundTrigger, idButton::Event_SpawnSoundTrigger)
+EVENT(EV_Button_Open, idButton::Event_Open)
+EVENT(EV_Button_Close, idButton::Event_Close)
+//EVENT(EV_Button_IsOpen, idButton::Event_IsOpen)
+//EVENT(EV_ReachedPos, idButton::Event_Reached_BinaryMover)
+END_CLASS
+*/
+/*
+================
+idButton::idButton
+================
+*//*
+idButton::idButton()
+{
+	triggersize = 1.0f;
+	noTouch = false;
+//	buddyStr.Clear();
+	trigger = NULL;
+//	sndTrigger = NULL;
+//	nextSndTriggerTime = 0;
+	localTriggerOrigin.Zero();
+	localTriggerAxis.Identity();
+//	requires.Clear();
+//	removeItem = 0;
+//	syncLock.Clear();
+//	companionDoor = NULL;
+	normalAxisIndex = 0;
+}
+*/
+/*
+================
+idButton::Save
+================
+*//*
+void idButton::Save(idSaveGame* savefile) const
+{
+
+	savefile->WriteFloat(triggersize);
+	savefile->WriteBool(noTouch);
+//	savefile->WriteString(buddyStr);
+//	savefile->WriteInt(nextSndTriggerTime);
+
+	savefile->WriteVec3(localTriggerOrigin);
+	savefile->WriteMat3(localTriggerAxis);
+
+//	savefile->WriteString(requires);
+//	savefile->WriteInt(removeItem);
+//	savefile->WriteString(syncLock);
+	savefile->WriteInt(normalAxisIndex);
+
+	savefile->WriteClipModel(trigger);
+//	savefile->WriteClipModel(sndTrigger);
+
+	savefile->WriteObject(companionDoor);
+}
+*/
+/*
+================
+idButton::Restore
+================
+*//*
+void idButton::Restore(idRestoreGame* savefile)
+{
+
+	savefile->ReadFloat(triggersize);
+	savefile->ReadBool(noTouch);
+//	savefile->ReadString(buddyStr);
+//	savefile->ReadInt(nextSndTriggerTime);
+
+	savefile->ReadVec3(localTriggerOrigin);
+	savefile->ReadMat3(localTriggerAxis);
+
+//	savefile->ReadString(requires);
+//	savefile->ReadInt(removeItem);
+//	savefile->ReadString(syncLock);
+	savefile->ReadInt(normalAxisIndex);
+
+	savefile->ReadClipModel(trigger);
+//	savefile->ReadClipModel(sndTrigger);
+
+	savefile->ReadObject(reinterpret_cast<idClass*&>(companionDoor));
+}
+*/
+/*
+================
+idButton::Spawn
+================
+*//*
+void idButton::Spawn()
+{
+	idVec3		abs_movedir;
+	float		distance;
+	idVec3		size;
+	idVec3		movedir;
+	float		dir;
+	float		lip;
+	float		time;
+	float		speed;
+
+	// get the direction to move
+	if (!spawnArgs.GetFloat("movedir", "0", dir))
+	{
+		// no movedir, so angle defines movement direction and not orientation,
+		// a la oldschool Quake
+		SetAngles(ang_zero);
+		spawnArgs.GetFloat("angle", "0", dir);
+	}
+	GetMovedir(dir, movedir);
+
+	// default speed of 400
+//	spawnArgs.GetFloat("speed", "400", speed);
+
+	// default wait of 2 seconds
+	spawnArgs.GetFloat("wait", "3", wait);
+
+	// default lip of 8 units
+	spawnArgs.GetFloat("lip", "8", lip);
+
+	// by default no damage
+//	spawnArgs.GetFloat("damage", "0", damage);
+
+	// trigger size
+	spawnArgs.GetFloat("triggersize", "180", triggersize);
+
+	fl.takedamage = false;
+	spawnArgs.GetBool("player_only", "0", playerOnly);
+
+	// expects syncLock to be a door that must be closed before this door will open
+//	spawnArgs.GetString("syncLock", "", syncLock);
+
+//	spawnArgs.GetString("buddy", "", buddyStr);
+
+//	spawnArgs.GetString("requires", "", requires);
+//	spawnArgs.GetInt("removeItem", "0", removeItem);
+
+	// ever separate piece of a door is considered solid when other team mates push entities
+	fl.solidForTeam = true;
+
+	// first position at start
+	pos1 = GetPhysics()->GetOrigin();
+
+	// calculate second position
+	abs_movedir[0] = idMath::Fabs(movedir[0]);
+	abs_movedir[1] = idMath::Fabs(movedir[1]);
+	abs_movedir[2] = idMath::Fabs(movedir[2]);
+	size = GetPhysics()->GetAbsBounds()[1] - GetPhysics()->GetAbsBounds()[0];
+	distance = (abs_movedir * size) - lip;
+	pos2 = pos1 + distance * movedir;
+
+
+
+//	if (spawnArgs.GetFloat("time", "1", time))
+//	{
+		InitTime(pos1, pos2, 1, 0, 0);
+//	}
+//	else
+//	{
+//		InitSpeed(pos1, pos2, speed, 0, 0);
+//	}
+
+	if (moveMaster == this)
+	{
+		if (health)
+		{
+			fl.takedamage = true;
+		}
+		if (noTouch || health)
+		{
+			// non touch/shoot doors
+			PostEventMS(&EV_Mover_MatchTeam, 0, moverState, gameLocal.slow.time);
+		}
+		else
+		{
+			// spawn trigger
+			PostEventMS(&EV_Button_SpawnButtonTrigger, 0);
+		}
+	}
+
+
+	companionDoor = NULL;
+
+	enabled = true;
+	blocked = false;
+}
+*/
+/*
+================
+idButton::Think
+================
+*//*
+void idButton::Think()
+{
+	idVec3 masterOrigin;
+	idMat3 masterAxis;
+
+	idMover_Binary::Think();
+
+	if (thinkFlags & TH_PHYSICS)
+	{
+		// update trigger position
+		if (GetMasterPosition(masterOrigin, masterAxis))
+		{
+			if (trigger)
+			{
+				trigger->Link(gameLocal.clip, this, 0, masterOrigin + localTriggerOrigin * masterAxis, localTriggerAxis * masterAxis);
+			}
+//			if (sndTrigger)
+//			{
+//				sndTrigger->Link(gameLocal.clip, this, 0, masterOrigin + localTriggerOrigin * masterAxis, localTriggerAxis * masterAxis);
+//			}
+		}
+	}
+}
+*/
+/*
+================
+idButton::PreBind
+================
+*//*
+void idButton::PreBind()
+{
+	idMover_Binary::PreBind();
+}
+*/
+/*
+================
+idButton::PostBind
+================
+*//*
+void idButton::PostBind()
+{
+	idMover_Binary::PostBind();
+	GetLocalTriggerPosition(trigger);
+}
+*/
+
+/*
+============
+idButton::Killed
+============
+*//*
+void idButton::Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location)
+{
+	fl.takedamage = false;
+	ActivateTargets(this);
+}
+*/
+/*
+================
+idButton::GetLocalTriggerPosition
+================
+*//*
+void idButton::GetLocalTriggerPosition(const idClipModel* trigger)
+{
+	idVec3 origin;
+	idMat3 axis;
+
+	if (!trigger)
+	{
+		return;
+	}
+
+	GetMasterPosition(origin, axis);
+	localTriggerOrigin = (trigger->GetOrigin() - origin) * axis.Transpose();
+	localTriggerAxis = trigger->GetAxis() * axis.Transpose();
+}
+*/
+/*
+================
+idButton::Use
+================
+*//*
+void idButton::Use(idEntity* other, idEntity* activator)
+{
+//	if (gameLocal.RequirementMet(activator, requires, removeItem))
+//	{
+//		if (syncLock.Length())
+//		{
+//			idEntity* sync = gameLocal.FindEntity(syncLock);
+//			if (sync != NULL && sync->IsType(idDoor::Type))
+//			{
+//				if (static_cast<idDoor*>(sync)->IsOpen())
+//				{
+//					return;
+//				}
+//			}
+//		}
+
+		ActivateTargets(other);
+		Use_BinaryMover(activator);
+//	}
+}
+*/
+/*
+================
+idButton::Open
+================
+*//*
+void idButton::Open()
+{
+	GotoPosition2();
+	renderEntity.shaderParms[SHADERPARM_MODE] = 1;
+	UpdateVisuals();
+}
+*/
+/*
+================
+idButton::Close
+================
+*//*
+void idButton::Close()
+{
+	GotoPosition1();
+	renderEntity.shaderParms[SHADERPARM_MODE] = 0;
+	UpdateVisuals();
+}
+*/
+/*
+================
+idButton::IsOpen
+================
+*/
+/*
+bool idButton::IsOpen()
+{
+	return (moverState != MOVER_POS1);
+}
+*/
+/*
+================
+idButton::IsNoTouch
+================
+*//*
+bool idButton::IsNoTouch()
+{
+	return noTouch;
+}
+*/
+/*
+================
+idButton::AllowPlayerOnly
+================
+*//*
+bool idButton::AllowPlayerOnly(idEntity* ent)
+{
+	if (playerOnly && !ent->IsType(idPlayer::Type))
+	{
+		return false;
+	}
+
+	return true;
+}
+*/
+/*
+======================
+idButton::CalcTriggerBounds
+
+Calcs bounds for a trigger.
+======================
+*//*
+void idButton::CalcTriggerBounds(float size, idBounds& bounds)
+{
+	idMover_Binary*	other;
+	int				i;
+	int				best;
+
+	// find the bounds of everything on the team
+	bounds = GetPhysics()->GetBounds();
+
+	fl.takedamage = true;
+	for (other = activateChain; other != NULL; other = other->GetActivateChain())
+	{
+		if (other->IsType(idButton::Type))
+		{
+			// find the bounds of everything on the team
+//			bounds.AddBounds(other->GetPhysics()->GetAbsBounds());
+
+			// set all of the slaves as shootable
+			other->fl.takedamage = true;
+		}
+	}
+
+	// find the thinnest axis, which will be the one we expand
+	best = 0;
+	for (i = 1; i < 3; i++)
+	{
+		if (bounds[1][i] - bounds[0][i] < bounds[1][best] - bounds[0][best])
+		{
+			best = i;
+		}
+	}
+	normalAxisIndex = best;
+	bounds[0][best] -= size;
+	bounds[1][best] += size;
+	bounds[0] -= GetPhysics()->GetOrigin();
+	bounds[1] -= GetPhysics()->GetOrigin();
+}
+*/
+/*
+======================
+idButton::Event_SpawnButtonTrigger
+
+All of the parts of a door have been spawned, so create
+a trigger that encloses all of them.
+======================
+*/
+
+/*void idButton::Event_SpawnButtonTrigger()
+{
+	idBounds		bounds;
+	idMover_Binary*	other;
+
+	if (trigger)
+	{
+		// already have a trigger, so don't spawn a new one.
+		return;
+	}
+
+	CalcTriggerBounds(triggersize, bounds);
+
+	// create a trigger clip model
+	trigger = new(TAG_PHYSICS_CLIP_MOVER) idClipModel(idTraceModel(bounds));
+	trigger->Link(gameLocal.clip, this, 255, GetPhysics()->GetOrigin(), mat3_identity);
+	trigger->SetContents(CONTENTS_TRIGGER);
+
+	GetLocalTriggerPosition(trigger);
+
+	MatchActivateTeam(moverState, gameLocal.slow.time);
+}
+*/
+/*
+======================
+idButton::Event_SpawnSoundTrigger
+
+Spawn a sound trigger to activate locked sound if it exists.
+======================
+*/
+/*
+void idButton::Event_SpawnSoundTrigger()
+{
+	idBounds bounds;
+
+	if (sndTrigger)
+	{
+		return;
+	}
+
+	CalcTriggerBounds(triggersize * 0.5f, bounds);
+
+	// create a trigger clip model
+	sndTrigger = new(TAG_PHYSICS_CLIP_MOVER) idClipModel(idTraceModel(bounds));
+	sndTrigger->Link(gameLocal.clip, this, 254, GetPhysics()->GetOrigin(), mat3_identity);
+	sndTrigger->SetContents(CONTENTS_TRIGGER);
+
+	GetLocalTriggerPosition(sndTrigger);
+}
+*/
+
+/*
+================
+idButton::Event_Touch
+================
+*/
+/*void idButton::Event_Touch(idEntity* other, trace_t* trace)
+{
+	idVec3		contact, translate;
+	idVec3		planeaxis1, planeaxis2, normal;
+	idBounds	bounds;
+
+	if (common->IsClient())
+	{
+		return;
+	}
+
+	if (!enabled)
+	{
+		return;
+	}
+
+	// ################### SR	
+
+	idPlayer	*p;
+	p = static_cast<idPlayer *>(other);
+	if (IsNoTouch() && moverState == MOVER_POS1 && p->showhints && !health) {
+		p->ShowTip("Press", "_use", "to open unlocked doors", true);
+	}
+
+	// ################### END SR	
+
+	if (trigger && trace->c.id == trigger->GetId())
+	{
+		if (!IsNoTouch() && GetMoverState() != MOVER_1TO2)
+		{
+			if (AllowPlayerOnly(other))
+			{
+				Use(this, other);
+			}
+		}
+	}
+}
+*/
+/*
+================
+idDoor::Event_Open
+================
+*/
+/*void idButton::Event_Open()
+{
+	Open();
+}
+*/
+/*
+================
+idDoor::Event_Close
+================
+*/
+/*void idButton::Event_Close()
+{
+	Close();
+}
+*/
+
+
+CLASS_DECLARATION(idMover_Binary, idButton)
+EVENT(EV_Touch, idButton::Event_Touch)
+//EVENT(EV_TeamBlocked, idPlat::Event_TeamBlocked)
+//EVENT(EV_PartBlocked, idPlat::Event_PartBlocked)
+END_CLASS
+
+/*
+===============
+idPlat::idPlat
+===============
+*/
+idButton::idButton()
+{
+	trigger = NULL;
+	localTriggerOrigin.Zero();
+	localTriggerAxis.Identity();
+}
+
+/*
+===============
+idPlat::~idPlat
+===============
+*/
+idButton::~idButton()
+{
+	if (trigger)
+	{
+		delete trigger;
+	}
+}
+
+/*
+===============
+idPlat::Save
+===============
+*/
+void idButton::Save(idSaveGame* savefile) const
+{
+	savefile->WriteClipModel(trigger);
+	savefile->WriteVec3(localTriggerOrigin);
+	savefile->WriteMat3(localTriggerAxis);
+}
+
+/*
+===============
+idPlat::Restore
+===============
+*/
+void idButton::Restore(idRestoreGame* savefile)
+{
+	savefile->ReadClipModel(trigger);
+	savefile->ReadVec3(localTriggerOrigin);
+	savefile->ReadMat3(localTriggerAxis);
+}
+
+/*
+===============
+idPlat::Spawn
+===============
+*/
+void idButton::Spawn()
+{
+	float	lip;
+	float	height;
+	float	time;
+	float	speed;
+	float	accel;
+	float	decel;
+	bool	noTouch;
+
+	idVec3		abs_movedir;
+	float		distance;
+	idVec3		size;
+	idVec3		movedir;
+	float		dir;
+	idBounds	bsize;
+
+	spawnArgs.GetFloat("speed", "100", speed);
+	spawnArgs.GetFloat("wait", "3", wait);
+	spawnArgs.GetFloat("lip", "8", lip);
+	spawnArgs.GetBool("no_touch", "0", noTouch);
+	
+
+
+	// get the direction to move
+	if (!spawnArgs.GetFloat("movedir", "0", dir))
+	{
+		// no movedir, so angle defines movement direction and not orientation,
+		// a la oldschool Quake
+		SetAngles(ang_zero);
+		spawnArgs.GetFloat("angle", "0", dir);
+	}
+	GetMovedir(dir, movedir);
+
+	// first position at start
+	pos1 = GetPhysics()->GetOrigin();
+
+	// calculate second position
+	bsize = GetPhysics()->GetBounds();
+	abs_movedir[0] = idMath::Fabs(movedir[0]);
+	abs_movedir[1] = idMath::Fabs(movedir[1]);
+	abs_movedir[2] = idMath::Fabs(movedir[2]);
+	size = bsize[1] - bsize[0];//GetPhysics()->GetBounds()[1] - GetPhysics()->GetBounds()[0];
+	distance = (abs_movedir * size) - lip;
+	pos2 = pos1 + distance * movedir;
+	/*
+	// create second position
+	if (!spawnArgs.GetFloat("height", "0", height))
+	{
+		height = (GetPhysics()->GetBounds()[1][2] - GetPhysics()->GetBounds()[0][2]) - lip;
+	}
+
+	spawnArgs.GetBool("no_touch", "0", noTouch);
+
+	// pos1 is the rest (bottom) position, pos2 is the top
+	pos2 = GetPhysics()->GetOrigin();
+	pos1 = pos2;
+	pos1[2] -= height;*/
+	spawnArgs.GetFloat("time", "1", time);
+	InitTime(pos1, pos2, time, 0, 0);
+
+/*	if (spawnArgs.GetFloat("time", "1", time))
+	{
+		InitTime(pos1, pos2, time, 0, 0);
+	}
+	else
+	{
+		InitSpeed(pos1, pos2, speed, 0, 0);
+	}*/
+//	SetShaderParm(SHADERPARM_MODE, 1);
+//	SetMoverState(MOVER_POS1, gameLocal.slow.time);
+//	UpdateVisuals();
+
+	// spawn the trigger if one hasn't been custom made
+	if (health)
+	{
+		PostEventMS(&EV_Mover_MatchTeam, 0, moverState, gameLocal.slow.time);
+	}
+	else
+	{
+		// spawn trigger
+		SpawnButtonTrigger(pos1);
+	}
+}
+
+/*
+================
+idPlat::RunPhysics_NoBlocking
+================
+*/
+void idButton::RunPhysics_NoBlocking()
+{
+	int			i, startTime, endTime;
+	idEntity* 	part = NULL, *blockedPart = NULL, *blockingEntity = NULL;
+	trace_t		results;
+	bool		moved;
+
+	// don't run physics if not enabled
+	if (!(thinkFlags & TH_PHYSICS))
+	{
+		// however do update any animation controllers
+//		if (UpdateAnimationControllers())
+//		{
+//			BecomeActive(TH_ANIMATE);
+//		}
+		return;
+	}
+
+	/*
+	// if this entity is a team slave don't do anything because the team master will handle everything
+	if ( teamMaster && teamMaster != this ) {
+		return false;
+	}
+	*/
+	startTime = gameLocal.previousTime;
+	endTime = gameLocal.time;
+
+	gameLocal.push.InitSavingPushedEntityPositions();
+	blockedPart = NULL;
+
+	// save the physics state of the whole team and disable the team for collision detection
+/*	for (part = this; part != NULL; part = part->GetTeamChain())
+	{
+		if (part->GetPhysics())
+		{
+			if (!part->fl.solidForTeam)
+			{
+				part->GetPhysics()->DisableClip();
+			}
+			part->GetPhysics()->SaveState();
+		}
+	}
+
+
+	// move the whole team
+	for (part = this; part != NULL; part = part->GetTeamChain())
+	{
+
+		if (part->GetPhysics())
+		{
+
+			// run physics
+			moved = part->GetPhysics()->Evaluate(endTime - startTime, endTime);
+
+			// check if the object is blocked
+			blockingEntity = part->GetPhysics()->GetBlockingEntity();
+			if (blockingEntity)
+			{
+				blockedPart = part;
+				break;
+			}
+
+			// if moved or forced to update the visual position and orientation from the physics
+			if (moved || part->fl.forcePhysicsUpdate)
+			{
+				part->UpdateVisuals();
+			}
+
+			// update any animation controllers here so an entity bound
+			// to a joint of this entity gets the correct position
+			if (part->UpdateAnimationControllers())
+			{
+				part->BecomeActive(TH_ANIMATE);
+			}
+		}
+	}
+
+	// enable the whole team for collision detection
+	for (part = this; part != NULL; part = part->GetTeamChain())
+	{
+		if (part->GetPhysics())
+		{
+			if (!part->fl.solidForTeam)
+			{
+				part->GetPhysics()->EnableClip();
+			}
+		}
+	}*/
+
+	// set pushed
+	for (i = 0; i < gameLocal.push.GetNumPushedEntities(); i++)
+	{
+		idEntity* ent = gameLocal.push.GetPushedEntity(i);
+		ent->GetPhysics()->SetPushed(endTime - startTime);
+	}
+}
+
+/*
+================
+idPlat::ClientThink
+================
+*/
+void idButton::ClientThink(const int curTime, const float fraction, const bool predict)
+{
+	InterpolatePhysicsOnly(fraction);
+
+	Present();
+
+
+
+	//idMover_Binary::ClientThink( curTime, fraction, predict );
+
+	/*
+	idVec3 masterOrigin;
+	idMat3 masterAxis;
+
+	// Dont bother with blocking entities on clients.. host tells us our move state.
+	RunPhysics_NoBlocking();
+
+	Present();
+
+	if ( thinkFlags & TH_PHYSICS ) {
+		// update trigger position
+		if ( GetMasterPosition( masterOrigin, masterAxis ) ) {
+			if ( trigger ) {
+				trigger->Link( gameLocal.clip, this, 0, masterOrigin + localTriggerOrigin * masterAxis, localTriggerAxis * masterAxis );
+			}
+		}
+	}
+	*/
+}
+
+/*
+================
+idPlat::Think
+================
+*/
+void idButton::Think()
+{
+	idVec3 masterOrigin;
+	idMat3 masterAxis;
+
+	idMover_Binary::Think();
+
+	if (thinkFlags & TH_PHYSICS)
+	{
+		// update trigger position
+		if (GetMasterPosition(masterOrigin, masterAxis))
+		{
+			if (trigger)
+			{
+				trigger->Link(gameLocal.clip, this, 0, masterOrigin + localTriggerOrigin * masterAxis, localTriggerAxis * masterAxis);
+			}
+		}
+	}
+	if (GetMoverState() == MOVER_POS1)
+	{
+		SetShaderParm(SHADERPARM_MODE, 0);
+	//	UpdateVisuals();
+	}
+	else
+	{
+		SetShaderParm(SHADERPARM_MODE, 1);
+	//	UpdateVisuals();
+	}
+}
+
+/*
+================
+idPlat::PreBind
+================
+*/
+void idButton::PreBind()
+{
+	idMover_Binary::PreBind();
+}
+
+/*
+================
+idPlat::PostBind
+================
+*/
+void idButton::PostBind()
+{
+	idMover_Binary::PostBind();
+	GetLocalTriggerPosition(trigger);
+}
+
+/*
+================
+idPlat::GetLocalTriggerPosition
+================
+*/
+void idButton::GetLocalTriggerPosition(const idClipModel* trigger)
+{
+	idVec3 origin;
+	idMat3 axis;
+
+	if (!trigger)
+	{
+		return;
+	}
+
+	GetMasterPosition(origin, axis);
+	localTriggerOrigin = (trigger->GetOrigin() - origin) * axis.Transpose();
+	localTriggerAxis = trigger->GetAxis() * axis.Transpose();
+}
+
+/*
+==============
+idPlat::SpawnPlatTrigger
+===============
+*/
+void idButton::SpawnButtonTrigger(idVec3& pos)
+{
+	idBounds		bounds;
+	idVec3			tmin;
+	idVec3			tmax;
+
+	// the middle trigger will be a thin trigger just
+	// above the starting position
+	int				i;
+	int				best;
+
+	// find the bounds of everything on the team
+	bounds = GetPhysics()->GetBounds();
+
+
+
+	// find the thinnest axis, which will be the one we expand
+	best = 0;
+	for (i = 1; i < 3; i++)
+	{
+		if (bounds[1][i] - bounds[0][i] < bounds[1][best] - bounds[0][best])
+		{
+			best = i;
+		}
+	}
+	bounds[0][best] -= 32;// size;
+	bounds[1][best] += 32;// size;
+//	bounds[0] -= GetPhysics()->GetOrigin();
+//	bounds[1] -= GetPhysics()->GetOrigin();
+
+//	bounds = GetPhysics()->GetBounds();
+	/*
+	tmin[0] = bounds[0][0] + 33;
+	tmin[1] = bounds[0][1] + 33;
+	tmin[2] = bounds[0][2];
+
+	tmax[0] = bounds[1][0] - 33;
+	tmax[1] = bounds[1][1] - 33;
+	tmax[2] = bounds[1][2] + 8;
+
+	if (tmax[0] <= tmin[0])
+	{
+		tmin[0] = (bounds[0][0] + bounds[1][0]) * 0.5f;
+		tmax[0] = tmin[0] + 1;
+	}
+	if (tmax[1] <= tmin[1])
+	{
+		tmin[1] = (bounds[0][1] + bounds[1][1]) * 0.5f;
+		tmax[1] = tmin[1] + 1;
+	}*/
+
+	trigger = new(TAG_PHYSICS_CLIP_MOVER) idClipModel(idTraceModel(bounds));// idBounds(tmin, tmax)));
+	trigger->Link(gameLocal.clip, this, 255, GetPhysics()->GetOrigin(), mat3_identity);
+	trigger->SetContents(CONTENTS_TRIGGER);
+}
+
+/*
+==============
+idPlat::Event_Touch
+===============
+*/
+void idButton::Event_Touch(idEntity* other, trace_t* trace)
+{
+	if (common->IsClient())
+	{
+		return;
+	}
+
+	if (!other->IsType(idPlayer::Type))
+	{
+		return;
+	}
+
+	if ((GetMoverState() == MOVER_POS1) && trigger && (trace->c.id == trigger->GetId()) && (other->health > 0))
+	{
+		Use_BinaryMover(other);
+	}
+}
+
+/*
+================
+idPlat::Event_TeamBlocked
+================
+*//*
+void idPlat::Event_TeamBlocked(idEntity* blockedEntity, idEntity* blockingEntity)
+{
+	// reverse direction
+	Use_BinaryMover(activatedBy.GetEntity());
+}
+*/
+/*
+===============
+idPlat::Event_PartBlocked
+===============
+*//*
+void idPlat::Event_PartBlocked(idEntity* blockingEntity)
+{
+	if (damage > 0.0f)
+	{
+		blockingEntity->Damage(this, this, vec3_origin, "damage_moverCrush", damage, INVALID_JOINT);
+	}
+}
+*/
 /*
 ===============================================================================
 
@@ -5601,15 +6622,42 @@ void idRiser::Event_Activate( idEntity* activator )
 	{
 		Show();
 		float	time;
+		float	speed;
 		float	height;
 		idVec3	delta;
 		
-		spawnArgs.GetFloat( "time", "4", time );
+//		spawnArgs.GetFloat( "time", "4", time );
+		spawnArgs.GetFloat("speed", "32", speed);
 		spawnArgs.GetFloat( "height", "32", height );
 		
-		delta = vec3_origin;
-		delta[ 2 ] = height;
+		delta = physicsObj.GetOrigin();
+
+		if (spawnArgs.GetFloat("time", "4", time))
+		{
+			delta[2] += height;
+			physicsObj.SetLinearInterpolation(gameLocal.slow.time, 0, 0, time * 1000, physicsObj.GetOrigin(), delta);
+			StartSound("snd_move", SND_CHANNEL_BODY2, 0, false, NULL);
+			//	physicsObj.SetLinearExtrapolation(EXTRAPOLATION_LINEAR, gameLocal.slow.time, time * 1000, physicsObj.GetOrigin(), delta, vec3_origin);
+		}
+		else
+		{
+			delta[2] += height;// / abs(height);
+			physicsObj.SetLinearInterpolation(gameLocal.slow.time, 0, 0, abs(height / speed) * 1000, physicsObj.GetOrigin(), delta);
+			StartSound("snd_move", SND_CHANNEL_BODY2, 0, false, NULL);
+			//	physicsObj.SetLinearExtrapolation(EXTRAPOLATION_LINEAR, gameLocal.slow.time, (abs(height) / speed) * 1000, physicsObj.GetOrigin(), delta, vec3_origin);
+		}
+
 		
-		physicsObj.SetLinearExtrapolation( EXTRAPOLATION_LINEAR, gameLocal.slow.time, time * 1000, physicsObj.GetOrigin(), delta, vec3_origin );
+//		delta = vec3_origin;
+//		delta[ 2 ] = (height / 4);
+		
+//		if (spawnArgs.GetFloat("time", "4", time))
+//		{
+//			physicsObj.SetLinearExtrapolation(EXTRAPOLATION_LINEAR, gameLocal.slow.time, time * 1000, physicsObj.GetOrigin(), delta, vec3_origin);
+	//	}
+//		else
+//		{
+	//		physicsObj.SetLinearExtrapolation(EXTRAPOLATION_NONE, gameLocal.slow.time, (10000 / speed), physicsObj.GetOrigin(), delta, vec3_origin);
+//		}
 	}
 }
