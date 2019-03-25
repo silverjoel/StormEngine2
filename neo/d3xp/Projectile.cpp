@@ -695,14 +695,14 @@ bool idProjectile::Collide( const trace_t& collision, const idVec3& velocity )
 	{
 		return true;
 	}
-	
+	//QUIPCHECK
 	// if it impacts with water, play a surface effect and let it keep going
 	if ( collision.c.contents & CONTENTS_FLUID )
 	{
 		if ( !mImpactEffectWaterSurface.IsEmpty() )
 		{
 			idDict splashArgs;
-			splashArgs.Set( "model", mImpactEffectWaterSurface.c_str() );
+			splashArgs.Set("model", spawnArgs.GetString("model_liquid"));// mImpactEffectWaterSurface.c_str() );
 			splashArgs.Set( "start_off", "1" );
 
 			idMat3 effAxis = collision.c.normal.ToMat3();
@@ -722,7 +722,7 @@ bool idProjectile::Collide( const trace_t& collision, const idVec3& velocity )
 		GetPhysics()->SetClipMask( GetPhysics()->GetClipMask() & ~CONTENTS_FLUID );
 		return false;
 	}
-
+	
 	const bool isHitscan = spawnArgs.GetBool( "net_instanthit" );
 	
 	// hanlde slow projectiles here.
@@ -1282,7 +1282,9 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 		case SURFTYPE_CERAMIC:		fxname = spawnArgs.GetString("model_ceramic");		break;
 		case SURFTYPE_MIRROR:		fxname = spawnArgs.GetString("model_mirror");		break;
 		case SURFTYPE_BONE:			fxname = spawnArgs.GetString("model_bone");			break;
-		default:					fxname = spawnArgs.GetString("model_metal");		break;
+//		case SURFTYPE_SLIME:		fxname = spawnArgs.GetString("model_slime");			break;
+//		case SURFTYPE_CHEESE:		fxname = spawnArgs.GetString("model_cheese");			break;
+		default:					fxname = spawnArgs.GetString("model_dirt");		break;
 		}
 
 		/*
@@ -1303,7 +1305,7 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 	}
 	
 	// If the explosion is in liquid, spawn a particle splash
-	idVec3 testOrg = GetPhysics()->GetOrigin();
+/*	idVec3 testOrg = GetPhysics()->GetOrigin();
 	int testC = gameLocal.clip.Contents( testOrg, NULL, mat3_identity, CONTENTS_WATER, this );
 	if ( testC & CONTENTS_WATER )
 	{
@@ -1325,7 +1327,7 @@ void idProjectile::Explode( const trace_t& collision, idEntity* ignore )
 			fxname = NULL;
 		}
 	}
-	
+	*/
 	if( fxname && *fxname )
 	{
 		SetModel( fxname );

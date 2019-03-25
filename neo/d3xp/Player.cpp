@@ -87,7 +87,7 @@ const int WEAPON_SWITCH_DELAY = 150;
 // how many units to raise spectator above default view height so it's in the head of someone
 const int SPECTATE_RAISE = 25;
 
-const int HEALTHPULSE_TIME = 333;
+const int HEALTHPULSE_TIME = 1000;	// 333;	QUIPedit: megahealth rot
 
 // minimum speed to bob and play run/walk animations at
 const float MIN_BOB_SPEED = 5.0f;
@@ -3191,8 +3191,8 @@ float idPlayer::PowerUpModifier( int type )
 		}
 	}
 	
-	if( common->IsMultiplayer() && !common->IsClient() )
-	{
+//	if( common->IsMultiplayer() && !common->IsClient() )
+//	{
 		if( PowerUpActive( MEGAHEALTH ) )
 		{
 			if( healthPool <= 0 )
@@ -3205,15 +3205,35 @@ float idPlayer::PowerUpModifier( int type )
 			healthPool = 0;
 		}
 		
-		/*if( PowerUpActive( HASTE ) ) {
-			switch( type ) {
-			case SPEED: {
-				mod = 1.7f;
-				break;
-						}
+		if (PowerUpActive(QUAD))
+		{
+			switch (type)
+			{
+				case PROJECTILE_DAMAGE:
+				{
+					mod *= 4.0f;
+					break;
+				}
+				case MELEE_DAMAGE:
+				{
+					mod *= 4.0f;
+					break;
+				}
 			}
-		}*/
-	}
+		}
+
+		if( PowerUpActive( HASTE ) ) 
+		{
+			switch( type ) 
+			{
+				case SPEED: 
+				{
+					mod = 2.0f;
+					break;
+				}
+			}
+		}
+//	}
 	
 	return mod;
 }
@@ -3331,8 +3351,11 @@ bool idPlayer::GivePowerUp( int powerup, int time, unsigned int giveFlags )
 				}
 				break;
 			}
+			//	QUIPedit: megahealth
 			case MEGAHEALTH:
 			{
+				nextHealthPulse = gameLocal.time + 5000;	//wait 5 seconds before megahealth rot
+
 				if( giveFlags & ITEM_GIVE_FEEDBACK )
 				{
 					if( common->IsMultiplayer() )
@@ -3344,9 +3367,17 @@ bool idPlayer::GivePowerUp( int powerup, int time, unsigned int giveFlags )
 						StartSoundShader( declManager->FindSound( sound ), SND_CHANNEL_ANY, 0, false, NULL );
 					}
 				}
+				
 				if( giveFlags & ITEM_GIVE_UPDATE_STATE )
 				{
-					health = 200;
+					if ((health + 100) > (inventory.maxHealth + 150))
+					{
+						health = 250;
+					}
+					else
+					{
+						health += 100;
+					}
 				}
 				break;
 			}
@@ -3583,7 +3614,18 @@ void idPlayer::UpdatePowerUps()
 		}
 	}
 	
-	if( healthPool && gameLocal.time > nextHealthPulse && !AI_DEAD && health > 0 )
+	//	QUIOedit: megahealth rot
+	if (gameLocal.time > nextHealthPulse && !AI_DEAD && health > 100)
+	{
+//		assert(!common->IsClient());	// healthPool never be set on client
+//		int amt = (healthPool > 5.0f) ? 5 : healthPool;
+		health -= 1;
+	
+		nextHealthPulse = gameLocal.time + HEALTHPULSE_TIME;
+		healthPulse = true;
+	}
+
+/*	if( healthPool && gameLocal.time > nextHealthPulse && !AI_DEAD && health > 0 )
 	{
 		assert( !common->IsClient() );	// healthPool never be set on client
 		int amt = ( healthPool > 5.0f ) ? 5 : healthPool;
@@ -3606,7 +3648,8 @@ void idPlayer::UpdatePowerUps()
 			nextHealthPulse = gameLocal.time + HEALTHPULSE_TIME;
 			healthPulse = true;
 		}
-	}
+	}*/
+
 	if( !gameLocal.inCinematic && influenceActive == 0 && g_skill.GetInteger() == 3 && gameLocal.time > nextHealthTake && !AI_DEAD && health > g_healthTakeLimit.GetInteger() )
 	{
 		assert( !common->IsClient() );	// healthPool never be set on client
@@ -5950,9 +5993,9 @@ void idPlayer::CrashLand( const idVec3& oldOrigin, const idVec3& oldVelocity )
 		hardDelta	= 50.0f;
 		softDelta	= 30.0f;
 	} else {
-		fatalDelta	= spawnArgs.GetFloat( "fall_fatal", 75.0f);
-		hardDelta	= spawnArgs.GetFloat( "fall_hard", 50.0f);
-		softDelta	= spawnArgs.GetFloat( "fall_soft", 30.0f);
+		fatalDelta	= spawnArgs.GetFloat( "fall_fatal", 135.0f);
+		hardDelta	= spawnArgs.GetFloat( "fall_hard", 75.0f);
+		softDelta	= spawnArgs.GetFloat( "fall_soft", 50.0f);
 	}	
 	// ################################## END SR	
 	
@@ -9274,8 +9317,16 @@ void idPlayer::DamageFeedback( idEntity* victim, idEntity* inflictor, int& damag
 	{
 		return;
 	}
-	
-	damage *= PowerUpModifier( BERSERK );
+	//	QUIPedit: add quad damage
+	if (PowerUpActive(QUAD))
+	{
+		damage *= PowerUpModifier(QUAD);
+	}
+	else
+	{
+		damage *= PowerUpModifier(BERSERK);
+	}
+
 	if( damage && ( victim != this ) && ( victim->IsType( idActor::Type ) || victim->IsType( idDamagable::Type ) ) )
 	{
 	

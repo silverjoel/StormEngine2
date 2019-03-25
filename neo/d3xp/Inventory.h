@@ -40,8 +40,9 @@ enum
 	INVULNERABILITY,
 	HELLTIME,
 	ENVIROSUIT,
-	//HASTE,
+	HASTE,	//QUIPedit: added haste back
 	ENVIROTIME,
+	QUAD,	//QUIPedit: added for quad damage
 	MAX_POWERUPS
 };
 
