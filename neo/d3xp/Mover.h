@@ -413,7 +413,7 @@ public:
 	void					Save( idSaveGame* savefile ) const;
 	void					Restore( idRestoreGame* savefile );
 	
-	virtual void			Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location);
+//	virtual void			Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location);
 	virtual void			ClientThink( const int curTime, const float fraction, const bool predict );
 	virtual void			Think();
 	virtual void			PreBind();
@@ -541,6 +541,7 @@ public:
 
 	void					Save(idSaveGame* savefile) const;
 	void					Restore(idRestoreGame* savefile);
+	virtual void			Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location);
 	void					RunPhysics_NoBlocking();
 	virtual void			ClientThink(const int curTime, const float fraction, const bool predict);
 	virtual void			Think();

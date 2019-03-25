@@ -4100,11 +4100,11 @@ void idDoor::Show()
 idMover::Killed
 ============
 */
-void idDoor::Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location)
+/*void idDoor::Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location)
 {
 	fl.takedamage = false;
 	ActivateTargets(this);
-}
+}*/
 
 /*
 ================
@@ -5441,6 +5441,7 @@ void idButton::Spawn()
 	// spawn the trigger if one hasn't been custom made
 	if (health)
 	{
+		fl.takedamage = true;
 		PostEventMS(&EV_Mover_MatchTeam, 0, moverState, gameLocal.slow.time);
 	}
 	else
@@ -5643,6 +5644,16 @@ void idButton::PostBind()
 	GetLocalTriggerPosition(trigger);
 }
 
+/*
+============
+idMover::Killed
+============
+*/
+void idButton ::Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location)
+{
+//	fl.takedamage = false;
+	ActivateTargets(this);
+}
 /*
 ================
 idPlat::GetLocalTriggerPosition
