@@ -328,12 +328,12 @@ typedef enum
 	CONTENTS_NOCSG				= BIT( 21 ),	// don't cut this brush with CSG operations in the editor
 	
 	CONTENTS_REMOVE_UTIL		= ~( CONTENTS_AREAPORTAL | CONTENTS_NOCSG ),
-	CONTENTS_FLUID				= CONTENTS_WATER // add other fluid contents
+	CONTENTS_FLUID				= CONTENTS_WATER  //, CONTENTS_LAVA, CONTENTS_SLIME // add other fluid contents
 } contentsFlags_t;
 
 // surface types
-const int NUM_SURFACE_BITS		= 4;
-const int MAX_SURFACE_TYPES		= 1 << NUM_SURFACE_BITS;
+const int NUM_SURFACE_BITS = 4;// 5;// 4;
+const int MAX_SURFACE_TYPES		= 1 << NUM_SURFACE_BITS;  //may be a mistake quip
 
 typedef enum
 {
@@ -352,7 +352,9 @@ typedef enum
 	SURFTYPE_LAVA,		//QUIPEdit - Added surfacetype
 	SURFTYPE_CERAMIC,	//QUIPEdit - Added surfacetype
 	SURFTYPE_MIRROR,	// motorsep 04-07-2015; added SURFTYPE_MIRROR surface flag for oblique projections rendering cases
-	SURFTYPE_BONE		//QUIPEdit - Added surfacetype
+	SURFTYPE_BONE//,		//QUIPEdit - Added surfacetype
+//	SURFTYPE_SLIME//,
+//	SURFTYPE_CHEESE
 } surfTypes_t;
 
 // surface flags

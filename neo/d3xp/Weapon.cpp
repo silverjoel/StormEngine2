@@ -1201,23 +1201,31 @@ void idWeapon::Melee_Attack( void ) {
 					if ( ents_hit > 4 ) {
 						ents_hit = 0;	// if more than 5 is hit, allow 2nd hits
 					}	
-				} else if ( weaponDef->dict.GetBool( "impact_damage_effect" ) ) {
-					if ( ent->spawnArgs.GetBool( "bleed" ) ) {
+				} 
+				else if ( weaponDef->dict.GetBool( "impact_damage_effect" ) ) 
+				{
+					if ( ent->spawnArgs.GetBool( "bleed" ) ) 
+					{
 						hitSound = meleeDef2->dict.GetString( "snd_hit" );
 						ent->AddDamageEffect( tr, impulse, meleeDef2->dict.GetString( "classname" ) );
-					} else {
+					} 
+					else 
+					{
 						int type = tr.c.material->GetSurfaceType();
-						if ( type == SURFTYPE_NONE ) {
+						if ( type == SURFTYPE_NONE ) 
+						{
 							type = GetDefaultSurfaceType();
 						}
 						const char *materialType = gameLocal.sufaceTypeNames[ type ];
 						idVec3 decpos;
 						// start impact sound based on material type
 						hitSound = meleeDef2->dict.GetString( va( "snd_%s", materialType ) );
-						if ( *hitSound == '\0' ) {
+						if ( *hitSound == '\0' ) 
+						{
 							hitSound = meleeDef2->dict.GetString( "snd_metal" );
 						}
-						if ( gameLocal.time > nextStrikeFx ) {
+						if ( gameLocal.time > nextStrikeFx ) 
+						{
 							const char 	*decal;
 							float 		ang, ang_tmp, ang_rnd;
 						
@@ -1232,38 +1240,48 @@ void idWeapon::Melee_Attack( void ) {
 							ang = DEG2RAD( ang_tmp );
 							idVec3 offset = playerViewAxis.ToAngles().ToRight() * ( meleeDef2->dict.GetFloat( "decal_offset", "4.0" ) + ( gameLocal.random.RandomFloat() * meleeDef2->dict.GetFloat( "decal_rnd_offset", "2.0" ) ) );
 							decpos = tr.c.point;
-							if ( ATTACK_LEFT ) {
+							if ( ATTACK_LEFT ) 
+							{
 								decpos = decpos - offset;
-							} else {
+							} 
+							else 
+							{
 								decpos = decpos + offset;
 							}	
 						
 							// project decal
 							decal = meleeDef2->dict.GetString( va( "mtr_wound_%s", materialType ) );	//weaponDef->dict.GetString( "mtr_strike" );
-							if ( decal && *decal ) {
+							if ( decal && *decal ) 
+							{
 								gameLocal.ProjectDecal( decpos, playerViewAxis[0], 8.0f, true, meleeDef2->dict.GetFloat( "decal_size", "6.0" ), decal, ang );	//-tr.c.normal
 							}
 							const char *smokeName;
 							smokeName = meleeDef2->dict.GetString( va( "smoke_wound_%s", materialType ) );	//weaponDef->dict.GetString( "smoke_strike" );
-							if ( *smokeName != '\0' ) {
+							if ( *smokeName != '\0' ) 
+							{
 								strikeSmoke = static_cast<const idDeclParticle *>( declManager->FindType( DECL_PARTICLE, smokeName ) );
-							} else {
+							} 
+							else 
+							{
 								strikeSmoke = NULL;
 							}
 							start = playerViewOrigin;
 							end = start + ( decpos - start ) * 48.0f;
 							gameLocal.clip.TracePoint( tr, start, end, MASK_SHOT_RENDERMODEL, owner );
-							if ( tr.fraction < 1.0f ) {
+							if ( tr.fraction < 1.0f ) 
+							{
 								decpos = tr.c.point;
 							}
 							strikeSmokeStartTime = gameLocal.time;
 							strikePos = tr.c.point;	
 							strikeAxis = -tr.endAxis;
 							nextStrikeFx = gameLocal.time + 500;
-						} else {
+						} 
+						else 
+						{
 							hitSound = "";
 						}
-					}
+					}	
 				}
 			}
 		}

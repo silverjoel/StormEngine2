@@ -318,6 +318,8 @@ static infoParm_t	infoParms[] =
 	{"ceramic",		0,	SURFTYPE_CERAMIC,	0 },	//QUIPEdit - Added surfacetype
 	{"mirrorOblique",	0,	SURFTYPE_MIRROR,	0 },// motorsep 04-07-2015; added SURFTYPE_MIRROR surface flag for oblique projections rendering cases
 	{"bone",		0,	SURFTYPE_BONE,		0 },	//QUIPEdit - Added surfacetype
+//	{"slime",		0,	SURFTYPE_SLIME,		0 },	//QUIPEdit - Added surfacetype
+//	{"cheese",		0,	SURFTYPE_CHEESE,		0 },	//QUIPEdit - Added surfacetype
 };
 
 static const int numInfoParms = sizeof( infoParms ) / sizeof( infoParms[0] );

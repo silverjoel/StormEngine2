@@ -856,11 +856,25 @@ bool idInventory::Give( idPlayer* owner, const idDict& spawnArgs, const char* st
 			GivePowerUp( owner, ADRENALINE, SEC2MS( atof( value ) ) );
 		}
 	}
-	else if( !idStr::Icmp( statname, "mega" ) )
+	else if( !idStr::Icmp( statname, "megahealth" ) )
 	{
 		if( giveFlags & ITEM_GIVE_UPDATE_STATE )
 		{
 			GivePowerUp( owner, MEGAHEALTH, SEC2MS( atof( value ) ) );
+		}
+	}
+	else if (!idStr::Icmp(statname, "haste"))
+	{
+		if (giveFlags & ITEM_GIVE_UPDATE_STATE)
+		{
+			GivePowerUp(owner, HASTE, SEC2MS(atof(value)));
+		}
+	}
+	else if (!idStr::Icmp(statname, "quad"))
+	{
+		if (giveFlags & ITEM_GIVE_UPDATE_STATE)
+		{
+			GivePowerUp(owner, QUAD, SEC2MS(atof(value)));
 		}
 	}
 	else if( !idStr::Icmp( statname, "weapon" ) )

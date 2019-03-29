@@ -69,7 +69,7 @@ idGame* 					game = &gameLocal;	// statically pointed at an idGameLocal
 const char* idGameLocal::sufaceTypeNames[ MAX_SURFACE_TYPES ] =
 {
 	"none",	"metal", "stone", "flesh", "wood", "cardboard", "liquid", "glass", "plastic",
-	"ricochet", "surftype10", "surftype11", "surftype12", "surftype13", "mirrorOblique", "surftype15" // motorsep 04-07-2015; added "mirror" surface flag for oblique projections rendering cases; "heatHaze" for heat haze masking
+	"snow", "dirt", "sand", "lava", "ceramic", "mirrorOblique", "bone"//, "slime"//, "cheese" // motorsep 04-07-2015; added "mirror" surface flag for oblique projections rendering cases; "heatHaze" for heat haze masking
 };
 
 idCVar net_usercmd_timing_debug( "net_usercmd_timing_debug", "0", CVAR_BOOL, "Print messages about usercmd timing." );
@@ -94,7 +94,7 @@ void beam_t::Clear()
 // List of all defs used by the player that will stay on the fast timeline
 static const char* fastEntityList[] =
 {
-	"player_ranger",
+	"player_base",
 //	"weapon_flintlock",
 //	"projectile_plasma",
 //	"weapon_fists",
@@ -1072,7 +1072,7 @@ void idGameLocal::LoadMap( const char* mapName, int randseed )
 	FindEntityDef( "preCacheExtras", false );
 	FindEntityDef( "ammo_types", false );
 	FindEntityDef( "ammo_names", false );
-	FindEntityDef( "ammo_types_d3xp", false );
+//	FindEntityDef( "ammo_types_d3xp", false );	QUIP EDIT
 	
 	FindEntityDef( "damage_noair", false );
 	FindEntityDef( "damage_moverCrush", false );
@@ -2120,7 +2120,7 @@ void idGameLocal::SpawnPlayer( int clientNum )
 	else
 	{
 		// precache the player
-		args.Set( "classname", gameLocal.world->spawnArgs.GetString( "def_player", "player_ranger" ) );
+		args.Set( "classname", gameLocal.world->spawnArgs.GetString( "def_player", "player_base" ) );
 	}
 	
 	// It's important that we increment numClients before calling SpawnEntityDef, because some
