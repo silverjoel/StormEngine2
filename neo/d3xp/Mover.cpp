@@ -4146,9 +4146,17 @@ void idDoor::Use( idEntity* other, idEntity* activator )
 				}
 			}
 		}
-		
+		StartSound("snd_unlocked", SND_CHANNEL_ANY, 0, false, NULL);
 		ActivateTargets( activator );
 		Use_BinaryMover( activator );
+	}
+	else
+	{
+		if ((moverState == MOVER_POS1) && gameLocal.slow.time > nextSndTriggerTime)
+		{
+			StartSound("snd_locked", SND_CHANNEL_ANY, 0, false, NULL);
+			nextSndTriggerTime = gameLocal.slow.time + 5000;
+		}
 	}
 }
 
