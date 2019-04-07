@@ -191,6 +191,9 @@ private:
 	float					angularFriction;			// rotational friction
 	float					contactFriction;			// friction with contact surfaces
 	float					bouncyness;					// bouncyness
+#ifdef MOD_WATERPHYSICS		//4/5
+	float					volume;				
+#endif
 	idClipModel* 			clipModel;					// clip model used for collision detection
 	
 	// derived properties
@@ -209,17 +212,33 @@ private:
 	// master
 	bool					hasMaster;
 	bool					isOrientated;
-	
+#ifdef MOD_WATERPHYSICS		//4/5
+	// buoyancy
+	int						noMoveTime;						// suspend simulation if hardly any movement for this many seconds
+#endif
+
 private:
 	friend void				RigidBodyDerivatives( const float t, const void* clientData, const float* state, float* derivatives );
+#ifdef MOD_WATERPHYSICS		//4/5
+	// Buoyancy stuff
+	// Approximates the center of mass of the submerged portion of the rigid body.
+	virtual bool				GetBuoyancy(const idVec3 &pos, const idMat3 &rotation, idVec3 &bCenter, float &percent) const;
+	// Returns rough a percentage of which percent of the body is in water.
+	virtual float				GetSubmergedPercent(const idVec3 &pos, const idMat3 &rotation) const;
+#endif
 	void					Integrate( const float deltaTime, rigidBodyPState_t& next );
 	bool					CheckForCollisions( const float deltaTime, rigidBodyPState_t& next, trace_t& collision );
 	bool					CollisionImpulse( const trace_t& collision, idVec3& impulse );
 	void					ContactFriction( float deltaTime );
 	void					DropToFloorAndRest();
+#ifdef MOD_WATERPHYSICS		//4/5
+	bool					TestIfAtRest(void);
+#else 	
 	bool					TestIfAtRest() const;
+#endif
 	void					Rest();
 	void					DebugDraw();
+
 };
 
 #endif /* !__PHYSICS_RIGIDBODY_H__ */

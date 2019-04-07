@@ -2927,7 +2927,7 @@ void idBeam::ReadFromSnapshot( const idBitMsg& msg )
 	}
 }
 
-
+#ifndef MOD_WATERPHYSICS		//4/5
 /*
 ===============================================================================
 
@@ -2997,7 +2997,7 @@ void idLiquid::Event_Touch( idEntity* other, trace_t* trace )
 		model->IntersectBounds( other->GetPhysics()->GetBounds().Translate( pos ), -10.0f );
 	*/
 }
-
+#endif
 
 /*
 ===============================================================================

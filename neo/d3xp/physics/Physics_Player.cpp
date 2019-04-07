@@ -1457,6 +1457,10 @@ bool idPhysics_Player::CheckWaterJump() {
 	idVec3	spot;
 	int		cont;
 	idVec3	flatforward;
+#ifdef MOD_WATERPHYSICS		//4/5
+	const idBounds &bounds = this->GetBounds();
+	idVec3 offset = (((bounds[0] + bounds[1]) * 0.5f) * gravityNormal) * gravityNormal;
+#endif
 
 	if( current.movementTime ) {
 		return false;
@@ -1469,9 +1473,13 @@ bool idPhysics_Player::CheckWaterJump() {
 
 	flatforward = viewForward - ( viewForward * gravityNormal ) * gravityNormal;
 	flatforward.Normalize();
-
+#ifdef MOD_WATERPHYSICS		//4/5
+	spot = current.origin + ((bounds[1].x + 1.0f) * flatforward);
+	spot += offset;
+#else
 	spot = current.origin + 30.0f * flatforward;
 	spot -= 4.0f * gravityNormal;
+#endif
 	cont = gameLocal.clip.Contents( spot, NULL, mat3_identity, -1, self );
 
 	// motorsep 03-18-2015; FIXME: this check prevents player from swimming up using JUMP key, when standing on the bottom underwater.
@@ -1481,7 +1489,11 @@ bool idPhysics_Player::CheckWaterJump() {
 			return false;
 	}
 		
+#ifdef MOD_WATERPHYSICS		//4/5
+	spot += 0.75f * offset;
+#else
 	spot -= 16.0f * gravityNormal;
+#endif
 	cont = gameLocal.clip.Contents( spot, NULL, mat3_identity, -1, self );
 	if( cont )
 	{
@@ -1496,6 +1508,7 @@ bool idPhysics_Player::CheckWaterJump() {
 	return true;
 }
 
+#ifndef MOD_WATERPHYSICS		//4/5
 /*
 =============
 idPhysics_Player::SetWaterLevel
@@ -1542,6 +1555,7 @@ void idPhysics_Player::SetWaterLevel()
 		}
 	}
 }
+#endif
 
 /*
 ================
@@ -1692,6 +1706,7 @@ void idPhysics_Player::MovePlayer( int msec )
 	current.pushVelocity.Zero();
 }
 
+#ifndef MOD_WATERPHYSICS		//4/5
 /*
 ================
 idPhysics_Player::GetWaterLevel
@@ -1711,6 +1726,7 @@ int idPhysics_Player::GetWaterType() const
 {
 	return waterType;
 }
+#endif
 
 /*
 ================
@@ -1892,9 +1908,10 @@ void idPhysics_Player::Save( idSaveGame* savefile ) const
 	
 	savefile->WriteBool( ladder );
 	savefile->WriteVec3( ladderNormal );
-	
+#ifndef MOD_WATERPHYSICS		//4/5
 	savefile->WriteInt( ( int )waterLevel );
 	savefile->WriteInt( waterType );
+#endif
 	
 	// ####################################### SR
 	
@@ -1944,8 +1961,10 @@ void idPhysics_Player::Restore( idRestoreGame* savefile )
 	savefile->ReadBool( ladder );
 	savefile->ReadVec3( ladderNormal );
 	
+#ifndef MOD_WATERPHYSICS		//4/5
 	savefile->ReadInt( ( int& )waterLevel );
 	savefile->ReadInt( waterType );
+#endif
 	
 	// ########################################### SR
 	

@@ -142,6 +142,10 @@ extern idCVar	af_useLinearTime;
 extern idCVar	af_useImpulseFriction;
 extern idCVar	af_useJointImpulseFriction;
 extern idCVar	af_useSymmetry;
+#ifdef MOD_WATERPHYSICS		//4/5
+extern idCVar	af_useBodyDensityBuoyancy;
+extern idCVar	af_useFixedDensityBuoyancy;
+#endif
 extern idCVar	af_skipSelfCollision;
 extern idCVar	af_skipLimits;
 extern idCVar	af_skipFriction;
@@ -169,12 +173,16 @@ extern idCVar	af_showVelocity;
 extern idCVar	af_showActive;
 extern idCVar	af_testSolid;
 
+
 extern idCVar	rb_showTimings;
 extern idCVar	rb_showBodies;
 extern idCVar	rb_showMass;
 extern idCVar	rb_showInertia;
 extern idCVar	rb_showVelocity;
 extern idCVar	rb_showActive;
+#ifdef MOD_WATERPHYSICS		//4/5
+extern idCVar	rb_showBuoyancy;
+#endif
 
 extern idCVar	pm_jumpheight;
 extern idCVar	pm_stepsize;
@@ -289,5 +297,6 @@ extern idCVar g_flagAttachAngleZ;
 extern idCVar g_CTFArrows;
 
 extern idCVar	net_clientSelfSmoothing;
+
 
 #endif /* !__SYS_CVAR_H__ */

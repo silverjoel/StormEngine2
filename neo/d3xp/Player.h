@@ -478,7 +478,9 @@ public:
 	void					SetCurrentHeartRate();
 	int						GetBaseHeartRate();
 	void					UpdateAir();
-	
+#ifdef MOD_WATERPHYSICS
+	void					PlaySwimmingSplashSound(const char *soundName); // grayman #3413
+#endif
 	void					UpdatePowerupHud();
 	
 	virtual bool			HandleSingleGuiCommand( idEntity* entityGui, idLexer* src );

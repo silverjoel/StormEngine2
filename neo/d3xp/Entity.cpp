@@ -129,6 +129,10 @@ const idEventDef EV_IsPowerupActive( "isPowerupActive", "d", 'd' );
 const idEventDef EV_WeaponAvailable( "weaponAvailable", "s", 'd' );
 const idEventDef EV_GetWeaponEntity( "getWeaponEntity", NULL, 'e' );
 const idEventDef EV_RandomPath( "randomPath", NULL, 'e' );
+#ifdef MOD_WATERPHYSICS		//4/5
+const idEventDef EV_GetMass("getMass", "d", 'f');
+const idEventDef EV_IsInLiquid("isInLiquid", NULL, 'd');
+#endif
 
 ABSTRACT_DECLARATION( idClass, idEntity )
 EVENT( EV_GetName,				idEntity::Event_GetName )
@@ -212,6 +216,10 @@ EVENT( EV_IsPowerupActive,		idEntity::Event_IsPowerupActive )
 EVENT( EV_WeaponAvailable,		idEntity::Event_WeaponAvailable )
 EVENT( EV_GetWeaponEntity,		idEntity::Event_GetWeaponEntity )
 EVENT( EV_RandomPath,			idEntity::Event_RandomPath )
+#ifdef MOD_WATERPHYSICS
+EVENT(EV_GetMass, idEntity::Event_GetMass)
+EVENT(EV_IsInLiquid, idEntity::Event_IsInLiquid)
+#endif
 END_CLASS
 
 /*
@@ -5748,6 +5756,29 @@ void idEntity::Event_SetNeverDormant( int enable )
 	fl.neverDormant	= ( enable != 0 );
 	dormantStart = 0;
 }
+
+#ifdef MOD_WATERPHYSICS		//4/5
+/*
+================
+idEntity::Event_GetMass
+================
+*/
+void idEntity::Event_GetMass(int id) 
+{
+	idThread::ReturnFloat(physics->GetMass(id));
+}
+
+/*
+================
+idEntity::Event_IsInLiquid
+================
+*/
+void idEntity::Event_IsInLiquid(void) 
+{
+	idThread::ReturnInt(physics->GetWater() != NULL);
+}
+
+#endif
 
 /*
 ================

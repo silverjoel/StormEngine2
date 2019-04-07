@@ -68,6 +68,10 @@ If you have questions concerning this license or the applicable additional terms
 
 class idEntity;
 
+#ifdef MOD_WATERPHYSICS		//4/5
+class idPhysics_Liquid;
+#endif
+
 typedef struct impactInfo_s
 {
 	float						invMass;			// inverse mass
@@ -195,6 +199,12 @@ public:	// common physics interface
 	// networking
 	virtual void				WriteToSnapshot( idBitMsg& msg ) const = 0;
 	virtual void				ReadFromSnapshot( const idBitMsg& msg ) = 0;
+
+#ifdef MOD_WATERPHYSICS		//4/5
+	// gets/sets the water
+	virtual idPhysics_Liquid	*GetWater() { return NULL; }
+	virtual void				SetWater(idPhysics_Liquid *e) {}
+#endif
 };
 
 #endif /* !__PHYSICS_H__ */

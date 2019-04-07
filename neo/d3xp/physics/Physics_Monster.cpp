@@ -495,6 +495,11 @@ bool idPhysics_Monster::Evaluate( int timeStepMSec, int endTimeMSec )
 	idVec3 masterOrigin, oldOrigin;
 	idMat3 masterAxis;
 	float timeStep;
+
+#ifdef MOD_WATERPHYSICS		//4/5
+	waterLevel = WATERLEVEL_NONE;
+	waterType = 0;
+#endif
 	
 	timeStep = MS2SEC( timeStepMSec );
 	
@@ -527,6 +532,11 @@ bool idPhysics_Monster::Evaluate( int timeStepMSec, int endTimeMSec )
 	current.velocity -= current.pushVelocity;
 	
 	clipModel->Unlink();
+
+#ifdef MOD_WATERPHYSICS		//4/5
+	// check water level / type
+	idPhysics_Monster::SetWaterLevel();
+#endif
 	
 	// check if on the ground
 	idPhysics_Monster::CheckGround( current );

@@ -1073,6 +1073,18 @@ bool idAF::Load( idEntity* ent, const char* fileName )
 		}
 	}
 	
+#ifdef MOD_WATERPHYSICS		//4/5
+	// load how the body will be floated in liquid
+	bool isFixedDensity;
+	if (ent->spawnArgs.GetBool("fixedDensityBuoyancy", "1", isFixedDensity))
+		physicsObj.SetFixedDensityBuoyancy(isFixedDensity);
+
+	// load liquid density from file
+	float liquidDensity;
+	if (ent->spawnArgs.GetFloat("liquidDensity", "", liquidDensity))
+		physicsObj.SetLiquidDensity(liquidDensity);
+#endif
+
 	physicsObj.SetMass( file->totalMass );
 	physicsObj.SetChanged();
 	

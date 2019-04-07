@@ -59,6 +59,10 @@ extern const idEventDef EV_SetSkin;
 extern const idEventDef EV_StartSoundShader;
 extern const idEventDef EV_StopSound;
 extern const idEventDef EV_CacheSoundShader;
+#ifdef MOD_WATERPHYSICS		//4/5
+extern const idEventDef EV_GetMass;		
+extern const idEventDef EV_IsInLiquid;	
+#endif
 extern const idEventDef EV_PrecacheSkin; // motorsep 08-23-2014; allows precaching of skins
 extern const idEventDef EV_PrecacheModelDef; // motorsep 09-16-2015; allows precaching of models/anims
 extern const idEventDef EV_PrecacheParticle; // motorsep 09-16-2015; allows precaching of particles
@@ -690,6 +694,10 @@ private:
 	void					Event_WeaponAvailable( const char * weaponName );
 	void					Event_GetWeaponEntity();
 	void					Event_RandomPath();
+#ifdef MOD_WATERPHYSICS		//4/5
+	void					Event_GetMass(int body);
+	void					Event_IsInLiquid(void);	
+#endif
 };
 
 #endif /* !__GAME_ENTITY_H__ */

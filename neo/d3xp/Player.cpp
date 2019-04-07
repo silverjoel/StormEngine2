@@ -6560,7 +6560,62 @@ void idPlayer::SetCurrentHeartRate()
 		lastHeartBeat = gameLocal.time;
 	}
 }
+/*
+#ifdef MOD_WATERPHYSICS
+/*
+=================================
+idPlayer::PlaySwimmingSplashSound
+=================================
+*//*
 
+// grayman #3413
+void idPlayer::PlaySwimmingSplashSound(const char *soundName)
+{
+	// Determine player's vertical speed parallel to gravity
+	const idVec3 curVelocity = GetPhysics()->GetLinearVelocity();
+	const idVec3& vGravNorm = GetPhysics()->GetGravityNormal();
+	const idVec3 curGravVelocity = (curVelocity*vGravNorm) * vGravNorm;
+	const float verticalVelocity = curGravVelocity.LengthFast();
+
+	// Adjust volume depending on vertical velocity.
+	// If vel is under 10, there's no sound.
+	// If vel is between 10 and 20, the volume adjustment varies between -10 and 0.
+	// If vel is over 20, the sound plays at full volume.
+	// The same volume adjustment is applied to the propagated sound.
+
+	if (verticalVelocity <= 10.0f)
+	{
+		return; // silent
+	}
+
+	float volAdjust = 0;
+	if (verticalVelocity <= 20.0f)
+	{
+		volAdjust = verticalVelocity - 20.0f;
+	}
+
+	const char* sound;
+	if (!spawnArgs.GetString(soundName, "", &sound))
+	{
+		return;
+	}
+
+	// ignore empty spawnargs
+	if (sound[0] == '\0')
+	{
+		return;
+	}
+
+	const idSoundShader	*sndShader = declManager->FindSound(sound);
+	SetSoundVolume(sndShader->GetParms()->volume + volAdjust);
+	StartSoundShader(sndShader, SND_CHANNEL_ANY, SSF_GLOBAL, false, NULL);
+	SetSoundVolume(0.0f);
+
+	// propagate the suspicious sound to AI
+//	PropSoundDirect(soundName, true, false, volAdjust, 0);
+}
+#endif
+*/
 /*
 ==============
 idPlayer::UpdateAir
@@ -6577,9 +6632,9 @@ void idPlayer::UpdateAir()
 	bool	newAirless = false;
 	
 	// motorsep 03-22-2015; get water level to turn on oxygen consumption when underwater
-	if( GetWaterLevelLocal() == WATERLEVEL_HEAD ) {
-		newAirless = true;
-	}
+//	if( GetWaterLevelLocal() == WATERLEVEL_HEAD ) {
+//		newAirless = true;
+//	}
 
 	if( gameLocal.vacuumAreaNum != -1 )
 	{
@@ -6603,6 +6658,17 @@ void idPlayer::UpdateAir()
 		}
 	}
 	
+#ifdef MOD_WATERPHYSICS		//4/5
+
+	//idPhysics* phys = GetPhysics();
+	idPhysics_Player *phys = dynamic_cast<idPhysics_Player *>(this->GetPhysics());
+
+	// check if the player is in water
+	if (phys != NULL && phys->GetWaterLevel() >= WATERLEVEL_HEAD)
+		newAirless = true;
+
+#endif
+
 	if( PowerUpActive( ENVIROTIME ) )
 	{
 		newAirless = false;
@@ -6612,8 +6678,13 @@ void idPlayer::UpdateAir()
 	{
 		if( !airless )
 		{
+//#ifdef MOD_WATERPHYSICS
+//			// player is dropping below the surface of the water
+//			PlaySwimmingSplashSound("snd_decompress");
+//#else
 			StartSound( "snd_decompress", SND_CHANNEL_ANY, SSF_GLOBAL, false, NULL );
 			StartSound( "snd_noAir", SND_CHANNEL_BODY2, 0, false, NULL );
+//#endif
 		}
 		airMsec -= ( gameLocal.time - gameLocal.previousTime );
 		if( airMsec < 0 )
@@ -6634,8 +6705,13 @@ void idPlayer::UpdateAir()
 	{
 		if( airless )
 		{
+//#ifdef MOD_WATERPHYSICS
+//			// player is rising above the surface of the water
+//			PlaySwimmingSplashSound("snd_recompress");
+//#else
 			StartSound( "snd_recompress", SND_CHANNEL_ANY, SSF_GLOBAL, false, NULL );
 			StopSound( SND_CHANNEL_BODY2, false );
+//#endif
 		}
 		airMsec += ( gameLocal.time - gameLocal.previousTime );	// regain twice as fast as lose
 		if( airMsec > pm_airMsec.GetInteger() )

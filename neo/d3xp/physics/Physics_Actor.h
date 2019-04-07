@@ -42,6 +42,15 @@ If you have questions concerning this license or the applicable additional terms
 ===================================================================================
 */
 
+#ifdef MOD_WATERPHYSICS		//4/5
+typedef enum {
+	WATERLEVEL_NONE,
+	WATERLEVEL_FEET,
+	WATERLEVEL_WAIST,
+	WATERLEVEL_HEAD
+} waterLevel_t;
+#endif
+
 class idPhysics_Actor : public idPhysics_Base
 {
 
@@ -66,6 +75,12 @@ public:	// common physics interface
 	idClipModel* 			GetClipModel( int id = 0 ) const;
 	int						GetNumClipModels() const;
 	
+#ifdef MOD_WATERPHYSICS		//4/5
+	// water stuff
+	virtual waterLevel_t	GetWaterLevel(void) const;
+	virtual int				GetWaterType(void) const;
+#endif
+
 	void					SetMass( float mass, int id = -1 );
 	float					GetMass( int id = -1 ) const;
 	
@@ -96,6 +111,10 @@ public:	// common physics interface
 	bool					EvaluateContacts();
 	
 protected:
+#ifdef MOD_WATERPHYSICS		//4/5
+	virtual void			SetWaterLevel(void);
+#endif
+
 	idClipModel* 			clipModel;			// clip model used for collision detection
 	idMat3					clipModelAxis;		// axis of clip model aligned with gravity direction
 	
@@ -107,7 +126,12 @@ protected:
 	idEntity* 				masterEntity;
 	float					masterYaw;
 	float					masterDeltaYaw;
-	
+
+#ifdef MOD_WATERPHYSICS		//4/5
+	waterLevel_t			waterLevel;
+	int						waterType;
+#endif
+
 	// results of last evaluate
 	idEntityPtr<idEntity>	groundEntityPtr;
 };

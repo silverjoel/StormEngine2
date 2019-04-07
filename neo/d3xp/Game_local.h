@@ -30,6 +30,8 @@ If you have questions concerning this license or the applicable additional terms
 #ifndef __GAME_LOCAL_H__
 #define	__GAME_LOCAL_H__
 
+// enables water physics
+#define MOD_WATERPHYSICS
 /*
 ===============================================================================
 
@@ -904,6 +906,9 @@ const int	CINEMATIC_SKIP_DELAY	= SEC2MS( 2.0f );
 #include "physics/Physics_Parametric.h"
 #include "physics/Physics_RigidBody.h"
 #include "physics/Physics_AF.h"
+#ifdef MOD_WATERPHYSICS		//4/5
+#include "physics/Physics_Liquid.h"
+#endif
 
 #include "SmokeParticles.h"
 
@@ -1000,6 +1005,9 @@ ID_INLINE SetTimeState::~SetTimeState()
 #include "AF.h"
 #include "IK.h"
 #include "AFEntity.h"
+#ifdef MOD_WATERPHYSICS		//4/5
+#include "Liquid.h"
+#endif
 #include "Misc.h"
 #include "Actor.h"
 #include "Projectile.h"
