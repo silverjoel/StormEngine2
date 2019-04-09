@@ -413,7 +413,6 @@ public:
 	void					Save( idSaveGame* savefile ) const;
 	void					Restore( idRestoreGame* savefile );
 	
-	virtual void			Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location);
 	virtual void			ClientThink( const int curTime, const float fraction, const bool predict );
 	virtual void			Think();
 	virtual void			PreBind();
@@ -472,63 +471,6 @@ private:
 };
 
 //QUIP Edit - added button functions
-/*
-class idButton : public idMover_Binary
-{
-public:
-	CLASS_PROTOTYPE(idButton);
-
-	idButton();
-
-	void					Spawn();
-	void					Save(idSaveGame* savefile) const;
-	void					Restore(idRestoreGame* savefile);
-	virtual void			Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location);
-//	virtual void			ClientThink(const int curTime, const float fraction, const bool predict);
-	virtual void			Think();
-	virtual void			PreBind();
-	virtual void			PostBind();
-//	virtual void			Hide();
-//	virtual void			Show();
-
-//	bool					IsOpen();
-	bool					IsNoTouch();
-	bool					AllowPlayerOnly(idEntity* ent);
-	void					Use(idEntity* other, idEntity* activator);
-	void					Close();
-	void					Open();
-//	void					SetCompanion(idDoor* door);
-
-
-private:
-	float					triggersize;
-	bool					noTouch;
-//	idStr					buddyStr;
-	idClipModel* 			trigger;
-//	idClipModel* 			sndTrigger;
-//	int						nextSndTriggerTime;
-	idVec3					localTriggerOrigin;
-	idMat3					localTriggerAxis;
-//	idStr					requires;
-//	int						removeItem;
-//	idStr					syncLock;
-	int						normalAxisIndex;		// door faces X or Y for spectator teleports
-	idDoor* 				companionDoor;
-
-	void					GetLocalTriggerPosition(const idClipModel* trigger);
-	void					CalcTriggerBounds(float size, idBounds& bounds);
-
-//	void					Event_Reached_BinaryMover();
-	void					Event_Touch(idEntity* other, trace_t* trace);
-//	void					Event_Activate(idEntity* activator);
-	void					Event_SpawnButtonTrigger();
-//	void					Event_SpawnSoundTrigger();
-	void					Event_Close();
-	void					Event_Open();
-//	void					Event_IsOpen();
-};
-*/
-
 class idButton : public idMover_Binary
 {
 public:
@@ -541,7 +483,6 @@ public:
 
 	void					Save(idSaveGame* savefile) const;
 	void					Restore(idRestoreGame* savefile);
-//	void					RunPhysics_NoBlocking();
 	virtual void			Killed(idEntity* inflictor, idEntity* attacker, int damage, const idVec3& dir, int location);
 	virtual void			ClientThink(const int curTime, const float fraction, const bool predict);
 	virtual void			Think();
@@ -552,12 +493,13 @@ private:
 	idClipModel* 			trigger;
 	idVec3					localTriggerOrigin;
 	idMat3					localTriggerAxis;
+	//QUIPEDIT for calling scripts
+	void				CallScript() const;
+	const function_t* 	scriptFunction;
 
 	void					GetLocalTriggerPosition(const idClipModel* trigger);
 	void					SpawnButtonTrigger(idVec3& pos);
 
-//	void					Event_TeamBlocked(idEntity* blockedEntity, idEntity* blockingEntity);
-//	void					Event_PartBlocked(idEntity* blockingEntity);
 	void					Event_Touch(idEntity* other, trace_t* trace);
 };
 
